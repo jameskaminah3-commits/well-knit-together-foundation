@@ -1,0 +1,6 @@
+insert into public.programs (slug, title, summary, description, focus_groups, counties, status)
+values
+  ('caregiver-support', 'Caregiver support', 'Practical guidance, peer connection, referrals, and dignity-centred support.', 'A caregiver-first program area for support requests, referrals, peer connection, and service navigation.', array['caregiver_disability', 'caregiver_vulnerable_group']::public.beneficiary_group[], array['Mombasa', 'Kilifi', 'Tana River', 'Kwale', 'Kajiado'], 'published'),
+  ('skills-livelihoods', 'Skills and livelihoods', 'Training, tools, market access, and economic pathways.', 'A livelihood program area for skills building, product development, market access, and income resilience.', array['economically_vulnerable_woman', 'person_with_disability']::public.beneficiary_group[], array['Mombasa', 'Kilifi', 'Kwale'], 'published'),
+  ('education-advocacy', 'Education and advocacy', 'Learning support, information, and community advocacy.', 'An education and advocacy program area for learning support, information, and community inclusion.', array['orphan_vulnerable_child', 'wider_community']::public.beneficiary_group[], array['Mombasa', 'Kilifi', 'Tana River', 'Kwale', 'Kajiado'], 'published')
+on conflict (slug) do nothing;
