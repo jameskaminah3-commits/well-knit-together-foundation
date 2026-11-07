@@ -38,4 +38,6 @@ npm run lint
 - Premium responsive visual system without a UI-kit lock-in
 - Full implementation sequence in `docs/IMPLEMENTATION_PLAN.md`
 
+For connected local development, see `docs/LOCAL_DEVELOPMENT.md`.
+
 This is the foundation layer. Payment providers, case-management workflows, inventory mutations, notifications, and production integrations are deliberately documented as later phases rather than being faked in the UI.
