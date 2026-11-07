@@ -29,10 +29,12 @@ npm run build
 npm run lint
 ```
 
-## Current skeleton
+## Current foundation
 
 - Public home, about, programs, impact, marketplace, and donate routes
-- Authentication entry point and dashboard boundary
+- Supabase email/password, magic-link, registration, recovery, and logout flows
+- Protected dashboard shell with account and TOTP security surfaces
+- Authentication entry point and role-aware dashboard boundary
 - Initial domain types and role model
 - Initial Supabase schema with RLS policies
 - Premium responsive visual system without a UI-kit lock-in

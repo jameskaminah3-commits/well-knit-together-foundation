@@ -20,6 +20,8 @@ npm run dev
 
 Open http://localhost:3000.
 
+For Phase 2 authentication testing, configure Supabase Authentication → URL Configuration with `http://localhost:3000` as the Site URL and `http://localhost:3000/auth/callback` as an allowed redirect URL. The working identity checklist is in `docs/PHASE_02_IMPLEMENTATION.md`.
+
 ## Environment safety
 
 - Never commit `.env.local`.

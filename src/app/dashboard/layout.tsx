@@ -1,0 +1,37 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SignOutButton } from "@/components/sign-out-button";
+import { createClient } from "@/lib/supabase/server";
+import { roleLabels } from "@/lib/roles";
+import type { AppRole } from "@/types/domain";
+
+export const metadata = { title: "Workspace" };
+
+export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/dashboard");
+
+  const { data: roleRows } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+  const roles = (roleRows ?? []).map((row) => row.role as AppRole);
+
+  return (
+    <div className="dashboard-shell">
+      <aside className="dashboard-sidebar">
+        <Link className="dashboard-brand" href="/dashboard"><span className="brand-mark">WKT</span><span><strong>Well Knit Together</strong><small>Secure workspace</small></span></Link>
+        <nav className="dashboard-nav" aria-label="Workspace navigation">
+          <Link href="/dashboard">Overview</Link>
+          <Link href="/dashboard/account">My account</Link>
+          <Link href="/dashboard/security">Security</Link>
+        </nav>
+        <div className="dashboard-user">
+          <span className="dashboard-user-label">Signed in as</span>
+          <strong>{user.email}</strong>
+          <div className="role-list">{roles.length ? roles.map((role) => <span className="role-chip" key={role}>{roleLabels[role] ?? role}</span>) : <span className="role-chip role-chip-muted">Access pending</span>}</div>
+          <SignOutButton />
+        </div>
+      </aside>
+      <main className="dashboard-content">{children}</main>
+    </div>
+  );
+}

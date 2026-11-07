@@ -28,6 +28,10 @@ Phase 1 working artifacts are now captured in:
 - `docs/SAFEGUARDING_AND_PRIVACY_BASELINE.md`
 - `docs/DESIGN_SYSTEM.md`
 
+Phase 2 implementation artifacts are now captured in:
+
+- `docs/PHASE_02_IMPLEMENTATION.md`
+
 ## Delivery phases
 
 ### Phase 1 — Discovery, content, and design system
@@ -61,6 +65,8 @@ Deliverables:
 - Audit events for sign-in, role changes, sensitive reads, exports, and administrative mutations.
 
 Acceptance: each role sees only its approved portal and data; privilege escalation tests fail safely.
+
+Current status: the first implementation slice is complete for authentication, protected routing, role visibility, account recovery, and TOTP enrollment. Invite-only staff onboarding, enforced privileged MFA, role administration, and audit events remain before Phase 2 can be accepted.
 
 ### Phase 3 — Public content and CMS workflows
 
