@@ -34,6 +34,7 @@ npm run lint
 - Public home, about, programs, impact, marketplace, and donate routes
 - Supabase email/password, magic-link, registration, recovery, and logout flows
 - Protected dashboard shell with account and TOTP security surfaces
+- Database-backed public programs and impact stories with a protected content studio
 - Authentication entry point and role-aware dashboard boundary
 - Initial domain types and role model
 - Initial Supabase schema with RLS policies

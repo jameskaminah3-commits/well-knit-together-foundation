@@ -24,6 +24,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
           <Link href="/dashboard/account">My account</Link>
           <Link href="/dashboard/security">Security</Link>
           {(roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/admin">Administration</Link>}
+          {(roles.includes("content_editor") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/content">Content studio</Link>}
         </nav>
         <div className="dashboard-user">
           <span className="dashboard-user-label">Signed in as</span>

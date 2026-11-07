@@ -32,6 +32,10 @@ Phase 2 implementation artifacts are now captured in:
 
 - `docs/PHASE_02_IMPLEMENTATION.md`
 
+Phase 3 implementation artifacts are now captured in:
+
+- `docs/PHASE_03_CONTENT_CMS.md`
+
 ## Delivery phases
 
 ### Phase 1 — Discovery, content, and design system
@@ -82,6 +86,8 @@ Deliverables:
 - Search engine metadata, sitemap, robots rules, and social sharing cards.
 
 Acceptance: a content editor can publish approved content without database access or developer help.
+
+Current status: public programs and impact stories are database-backed, consent-aware, SEO-ready, and editable through a protected content studio. Media storage, review queues, scheduling, and additional content types remain.
 
 ### Phase 4 — Support, referrals, and beneficiary services
 

@@ -22,3 +22,7 @@ export function hasAdminRole(roles: AppRole[]) {
 export function hasAdminAccess(roles: AppRole[], assuranceLevel: string | null) {
   return hasAdminRole(roles) && assuranceLevel === "aal2";
 }
+
+export function hasContentAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && (roles.includes("content_editor") || hasAdminRole(roles));
+}
