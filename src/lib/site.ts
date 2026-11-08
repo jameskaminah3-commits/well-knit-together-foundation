@@ -46,3 +46,24 @@ export const impactPillars = [
   "Economic empowerment",
   "Community inclusion",
 ];
+
+export const foundationVisuals = [
+  {
+    src: "https://www.thebasketroom.com/cdn/shop/products/V7OLOmsFTFymFdinkkk6_COLOUR-BLOCK-WEAVERS-KENYA-The-Basket-Room-5.jpg?v=1758190292&width=2000",
+    alt: "Two Kenyan women weaving sisal baskets together in a cooperative setting",
+    credit: "Sample editorial reference · The Basket Room",
+    label: "Economic empowerment",
+  },
+  {
+    src: "https://pcer.shorthandstories.com/ten-years-of-action-ten-years-of-progress-for-women-in-africa/assets/JaCtc44hhg/94_msmes_027_bd-1920x1280.jpg",
+    alt: "Women gathered around a sewing machine in a women-led workshop",
+    credit: "Sample editorial reference · African Development Bank",
+    label: "Learning together",
+  },
+  {
+    src: "https://images.squarespace-cdn.com/content/v1/58933bb2e3df28b756717818/5ce2a1e0-e6fe-45fa-a3d1-241b2c8b7287/55.png",
+    alt: "Kenyan artisan holding a handwoven basket in a colourful craft collection",
+    credit: "Sample editorial reference · Hadithi Crafts Kenya",
+    label: "Community care",
+  },
+];

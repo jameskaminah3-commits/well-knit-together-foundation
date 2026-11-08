@@ -11,8 +11,8 @@ export default async function DashboardPage() {
       <div className="dashboard-notice"><div><strong>Phase 4 support workspace is active.</strong><p>Verified case staff can receive, triage, refer, follow up, and close private support requests.</p></div><Link className="text-link" href="/dashboard/security">Review security</Link></div>
       <div className="program-grid">
         <article className="program-card"><p className="eyebrow">Programs</p><h3>Support requests and referrals</h3><p>Private case and participation workflows are available to verified case staff.</p><Link className="card-link" href="/dashboard/support">Open case workspace →</Link></article>
-        <article className="program-card"><p className="eyebrow">Funding</p><h3>Donations and campaigns</h3><p>Finance users will manage reconciliation and approved reporting without exposing payment secrets.</p><span className="card-status">Coming in Phase 5</span></article>
-        <article className="program-card"><p className="eyebrow">Commerce</p><h3>Products and orders</h3><p>Marketplace users will manage maker stories, inventory, fulfilment, and customer care.</p><span className="card-status">Coming in Phase 6</span></article>
+        <article className="program-card"><p className="eyebrow">Funding</p><h3>Donations and campaigns</h3><p>Give securely, follow campaign progress, and reconcile signed payment events without exposing payment secrets.</p><Link className="card-link" href="/dashboard/giving">Open giving workspace →</Link></article>
+        <article className="program-card"><p className="eyebrow">Commerce</p><h3>Products and orders</h3><p>Browse approved maker pieces, reserve stock, and keep fulfilment status in one calm customer workspace.</p><Link className="card-link" href="/marketplace">Browse marketplace →</Link></article>
       </div>
       <p className="dashboard-session">Authenticated session for <strong>{user?.email}</strong></p>
     </section>

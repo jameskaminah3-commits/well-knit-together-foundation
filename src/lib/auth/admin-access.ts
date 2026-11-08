@@ -34,3 +34,11 @@ export function hasCaseAccess(roles: AppRole[], assuranceLevel: string | null) {
 export function hasExportApprovalAccess(roles: AppRole[], assuranceLevel: string | null) {
   return hasAdminAccess(roles, assuranceLevel);
 }
+
+export function hasFinanceAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && (roles.includes("finance") || hasAdminRole(roles));
+}
+
+export function hasEngagementAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && (roles.includes("program_manager") || roles.includes("marketplace_manager") || hasAdminRole(roles));
+}

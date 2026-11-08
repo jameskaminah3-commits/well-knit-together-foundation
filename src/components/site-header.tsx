@@ -18,11 +18,25 @@ export function SiteHeader() {
           <Link href="/impact">Impact</Link>
           <Link href="/support">Request support</Link>
           <Link href="/marketplace">Marketplace</Link>
+          <Link href="/engage">Engage</Link>
           <Link href="/news">News</Link>
         </nav>
         <div className="header-actions">
           <Link className="text-link hide-mobile" href="/login">Sign in</Link>
           <Link className="button button-small" href="/donate">Give support</Link>
+          <details className="mobile-nav">
+            <summary>Menu</summary>
+            <nav className="mobile-nav-panel" aria-label="Mobile navigation">
+              <Link href="/about">About</Link>
+              <Link href="/programs">Programs</Link>
+              <Link href="/impact">Impact</Link>
+              <Link href="/support">Request support</Link>
+              <Link href="/marketplace">Marketplace</Link>
+              <Link href="/engage">Engage</Link>
+              <Link href="/news">News</Link>
+              <Link href="/login">Sign in</Link>
+            </nav>
+          </details>
         </div>
       </div>
     </header>

@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+
+function safeNextPath(value: string | null) {
+  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,21 +14,27 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const router = useRouter();
+  function getNextPath() {
+    return safeNextPath(new URLSearchParams(window.location.search).get("next"));
+  }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
     setMessage("");
-    const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (signInError) {
-      setError(signInError.message);
+    const response = await fetch("/api/auth/sign-in", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, nextPath: getNextPath() }),
+    });
+    const result = await response.json().catch(() => null) as { error?: string; nextPath?: string } | null;
+    if (!response.ok) {
+      setError(result?.error ?? "We could not sign you in. Please try again.");
       setBusy(false);
       return;
     }
-    router.push("/dashboard");
+    window.location.assign(result?.nextPath ?? getNextPath());
   }
 
   async function sendMagicLink() {
@@ -41,7 +50,7 @@ export default function LoginPage() {
       email,
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(getNextPath())}`,
       },
     });
     if (magicLinkError) setError(magicLinkError.message);

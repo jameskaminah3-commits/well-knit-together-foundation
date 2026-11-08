@@ -123,6 +123,8 @@ Deliverables:
 
 Acceptance: every successful payment has a verifiable provider reference, receipt path, reconciliation state, and audit trail.
 
+Current status: the fundraising data model, active campaign, donor giving history, finance dashboard, donation-intent API, signed/idempotent webhook path, receipt trigger, and campaign progress UI are implemented. Apply `supabase/migrations/0006_phase5_fundraising.sql` (already applied to the connected project) and configure the payment provider secret plus service-role webhook runtime before production acceptance.
+
 ### Phase 6 — Marketplace and economic empowerment
 
 Goal: help supported makers present and sell products sustainably.
@@ -139,6 +141,8 @@ Deliverables:
 
 Acceptance: an approved product can be discovered, purchased, fulfilled, reconciled, and included in impact reporting.
 
+Current status: the public marketplace catalogue, privacy-safe maker stories, seeded sample products, stock-aware bag, authenticated order-intent API, inventory reservations, product detail pages, and customer order dashboard are implemented. Apply `supabase/migrations/0007_phase6_marketplace.sql` (already applied to the connected project) and connect the shared payment provider plus fulfilment operations before production acceptance.
+
 ### Phase 7 — Partners, volunteers, training, and community engagement
 
 Goal: turn the website into a participation and capacity-building platform.
@@ -153,6 +157,8 @@ Deliverables:
 - Partner workspace with only the programs and referrals assigned to them.
 
 Acceptance: partners and volunteers can apply, be approved, participate, and receive only appropriate information.
+
+Current status: the Phase 7 public engagement landing, partner and volunteer application forms, seeded learning events with registration, staff-only engagement dashboard, and RLS-backed engagement migrations are implemented. The marketplace also carries clearly labelled sample reference imagery and a refreshed ink-teal, terracotta, and warm-paper palette. Replace sample imagery with rights-cleared maker uploads before launch.
 
 ### Phase 8 — Reporting, transparency, and measurement
 
