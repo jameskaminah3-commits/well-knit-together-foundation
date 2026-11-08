@@ -1,0 +1,11 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+
+export function ContentLocalizationForm({ entityType, entityId, existing }: { entityType: "program" | "story" | "content_item"; entityId: string; existing?: { title?: string | null; summary?: string | null; body?: string | null; seo_title?: string | null; seo_description?: string | null } }) {
+  const [form, setForm] = useState({ title: existing?.title ?? "", summary: existing?.summary ?? "", body: existing?.body ?? "", seo_title: existing?.seo_title ?? "", seo_description: existing?.seo_description ?? "" });
+  const [message, setMessage] = useState(""); const [error, setError] = useState("");
+  const update = (key: string, value: string) => setForm((current) => ({ ...current, [key]: value }));
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setMessage(""); setError(""); const response = await fetch("/api/content/localizations", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_type: entityType, entity_id: entityId, language: "sw", ...form }) }); const result = await response.json().catch(() => ({})); if (!response.ok) setError(result.error ?? "Could not save translation."); else setMessage("Swahili translation saved."); }
+  return <form className="translation-form" onSubmit={submit}><p className="form-note">Swahili translation</p><div className="form-two-col"><label>Title<input value={form.title} onChange={(event) => update("title", event.target.value)} required /></label><label>Summary<input value={form.summary} onChange={(event) => update("summary", event.target.value)} /></label></div><label>Body<textarea rows={4} value={form.body} onChange={(event) => update("body", event.target.value)} /></label><div className="form-two-col"><label>SEO title<input value={form.seo_title} onChange={(event) => update("seo_title", event.target.value)} /></label><label>SEO description<input value={form.seo_description} onChange={(event) => update("seo_description", event.target.value)} /></label></div><button className="button button-small" type="submit">Save translation</button>{error && <p className="form-alert form-alert-error">{error}</p>}{message && <p className="form-alert form-alert-success">{message}</p>}</form>;
+}

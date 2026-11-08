@@ -31,4 +31,4 @@ For Phase 2 authentication testing, configure Supabase Authentication → URL Co
 
 ## Schema workflow
 
-Add future database changes as ordered files under `supabase/migrations/`. Apply them through the Supabase SQL Editor for now. When the Supabase CLI is introduced, link it to project ref `dqgpglhklidojslmrbhu` and use migration history rather than editing the live schema manually.
+Add future database changes as ordered files under `supabase/migrations/`. Apply them through the Supabase SQL Editor for now. For the current workflow, apply `0003_phase3_content_cms.sql`, `0004_phase3_complete.sql`, and then `0005_phase4_support_services.sql` in order. When the Supabase CLI is introduced, link it to project ref `dqgpglhklidojslmrbhu` and use migration history rather than editing the live schema manually.

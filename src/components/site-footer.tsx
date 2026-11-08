@@ -15,6 +15,7 @@ export function SiteFooter() {
           <Link href="/programs">Our programs</Link>
           <Link href="/marketplace">Marketplace</Link>
           <Link href="/impact">Impact and reports</Link>
+          <Link href="/support">Request support</Link>
         </div>
         <div>
           <p className="footer-label">Get involved</p>

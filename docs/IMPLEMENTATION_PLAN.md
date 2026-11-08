@@ -87,7 +87,7 @@ Deliverables:
 
 Acceptance: a content editor can publish approved content without database access or developer help.
 
-Current status: public programs and impact stories are database-backed, consent-aware, SEO-ready, and editable through a protected content studio. Media storage, review queues, scheduling, and additional content types remain.
+Current status: implementation complete. Public programs and impact stories are database-backed, consent-aware, SEO-ready, and editable through a protected content studio. Media storage, review queues, scheduling, additional content types, localisation, sitemap, robots, and Open Graph support are implemented. Before production acceptance, apply the Phase 3 migrations and run the workflow checklist in `docs/PHASE_03_CONTENT_CMS.md` against the connected Supabase project.
 
 ### Phase 4 — Support, referrals, and beneficiary services
 
@@ -104,6 +104,8 @@ Deliverables:
 - SMS, email, and WhatsApp integration only after consent and provider review.
 
 Acceptance: a request can be received, triaged, referred, followed up, resolved, and audited without exposing sensitive records publicly.
+
+Current status: implementation slice complete. Public and assisted intake, private case management, referrals, safeguarding fields, retention metadata, redaction support, event auditing, and approval-gated minimal exports are implemented. Apply `supabase/migrations/0005_phase4_support_services.sql` and complete `docs/PHASE_04_SUPPORT_SERVICES.md` before production acceptance.
 
 ### Phase 5 — Donations and fundraising
 

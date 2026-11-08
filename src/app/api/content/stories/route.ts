@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { getAdminActor, hasContentAccess } from "@/lib/auth/admin-access";
 
-type StoryPayload = { id?: string; slug?: string; title?: string; excerpt?: string; body?: string; status?: "draft" | "published" | "archived"; consent_recorded?: boolean; seo_title?: string; seo_description?: string };
+type StoryPayload = { id?: string; slug?: string; title?: string; excerpt?: string; body?: string; status?: "draft" | "pending_review" | "published" | "archived"; consent_recorded?: boolean; scheduled_for?: string | null; default_language?: "en" | "sw"; seo_title?: string; seo_description?: string };
+
+function editorialState(status: StoryPayload["status"] = "draft") {
+  if (status === "pending_review" || status === "published") return { status: "draft" as const, review_status: "pending_review" as const };
+  return { status: status as "draft" | "archived", review_status: "draft" as const };
+}
 
 export async function POST(request: Request) {
   const actor = await getAdminActor();
@@ -9,9 +14,9 @@ export async function POST(request: Request) {
   if (!hasContentAccess(actor.roles, actor.assuranceLevel)) return NextResponse.json({ error: "Content access requires an assigned editor role and a verified authenticator session." }, { status: 403 });
   const payload = await request.json().catch(() => null) as StoryPayload | null;
   if (!payload?.slug || !payload.title || !payload.excerpt || !payload.body) return NextResponse.json({ error: "Slug, title, excerpt, and body are required." }, { status: 400 });
-  if (payload.status === "published" && !payload.consent_recorded) return NextResponse.json({ error: "A story must have recorded consent before publication." }, { status: 400 });
-  const record = { slug: payload.slug.trim().toLowerCase(), title: payload.title.trim(), excerpt: payload.excerpt.trim(), body: payload.body.trim(), status: payload.status ?? "draft", consent_recorded: payload.consent_recorded ?? false, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null, created_by: actor.user.id, published_at: payload.status === "published" ? new Date().toISOString() : null, reviewed_by: payload.status === "published" ? actor.user.id : null, reviewed_at: payload.status === "published" ? new Date().toISOString() : null };
-  const { data, error } = await actor.supabase.from("stories").insert(record).select("id").single();
+  if ((payload.status === "published" || payload.status === "pending_review") && !payload.consent_recorded) return NextResponse.json({ error: "A story must have recorded consent before review." }, { status: 400 });
+  const record = { slug: payload.slug.trim().toLowerCase(), title: payload.title.trim(), excerpt: payload.excerpt.trim(), body: payload.body.trim(), ...editorialState(payload.status), consent_recorded: payload.consent_recorded ?? false, default_language: payload.default_language ?? "en", scheduled_for: payload.scheduled_for || null, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null, created_by: actor.user.id };
+  const { data, error } = await actor.supabase.from("stories").insert(record as never).select("id").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   await createRevision(actor.supabase, actor.user.id, "story", data.id, record);
   return NextResponse.json({ ok: true, id: data.id });
@@ -23,9 +28,9 @@ export async function PATCH(request: Request) {
   if (!hasContentAccess(actor.roles, actor.assuranceLevel)) return NextResponse.json({ error: "Content access requires an assigned editor role and a verified authenticator session." }, { status: 403 });
   const payload = await request.json().catch(() => null) as StoryPayload | null;
   if (!payload?.id || !payload.slug || !payload.title || !payload.excerpt || !payload.body) return NextResponse.json({ error: "Story id, slug, title, excerpt, and body are required." }, { status: 400 });
-  if (payload.status === "published" && !payload.consent_recorded) return NextResponse.json({ error: "A story must have recorded consent before publication." }, { status: 400 });
-  const record = { slug: payload.slug.trim().toLowerCase(), title: payload.title.trim(), excerpt: payload.excerpt.trim(), body: payload.body.trim(), status: payload.status ?? "draft", consent_recorded: payload.consent_recorded ?? false, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null, published_at: payload.status === "published" ? new Date().toISOString() : null, reviewed_by: payload.status === "published" ? actor.user.id : null, reviewed_at: payload.status === "published" ? new Date().toISOString() : null };
-  const { error } = await actor.supabase.from("stories").update(record).eq("id", payload.id);
+  if ((payload.status === "published" || payload.status === "pending_review") && !payload.consent_recorded) return NextResponse.json({ error: "A story must have recorded consent before review." }, { status: 400 });
+  const record = { slug: payload.slug.trim().toLowerCase(), title: payload.title.trim(), excerpt: payload.excerpt.trim(), body: payload.body.trim(), ...editorialState(payload.status), consent_recorded: payload.consent_recorded ?? false, default_language: payload.default_language ?? "en", scheduled_for: payload.scheduled_for || null, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null };
+  const { error } = await actor.supabase.from("stories").update(record as never).eq("id", payload.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   await createRevision(actor.supabase, actor.user.id, "story", payload.id, record);
   return NextResponse.json({ ok: true });

@@ -26,3 +26,11 @@ export function hasAdminAccess(roles: AppRole[], assuranceLevel: string | null) 
 export function hasContentAccess(roles: AppRole[], assuranceLevel: string | null) {
   return assuranceLevel === "aal2" && (roles.includes("content_editor") || hasAdminRole(roles));
 }
+
+export function hasCaseAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && (roles.includes("program_manager") || hasAdminRole(roles));
+}
+
+export function hasExportApprovalAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return hasAdminAccess(roles, assuranceLevel);
+}

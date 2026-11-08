@@ -16,7 +16,9 @@ export function SiteHeader() {
           <Link href="/about">About</Link>
           <Link href="/programs">Programs</Link>
           <Link href="/impact">Impact</Link>
+          <Link href="/support">Request support</Link>
           <Link href="/marketplace">Marketplace</Link>
+          <Link href="/news">News</Link>
         </nav>
         <div className="header-actions">
           <Link className="text-link hide-mobile" href="/login">Sign in</Link>
