@@ -10,6 +10,7 @@ The foundation now has a Resend-ready transactional email layer. It keeps sensit
 - `email_messages` delivery ledger with accepted, delivered, bounced, complained, failed, and skipped states.
 - `email_preferences` foundation for user-controlled optional communications.
 - Signed Resend webhook route at `/api/email/webhook`.
+- MFA-gated administrator communications workspace at `/dashboard/communications` with delivery readiness and ledger visibility.
 - Health output reports whether email delivery is configured; `REQUIRE_EMAIL_DELIVERY=true` can make missing email configuration a deployment failure.
 
 ## Supabase Auth

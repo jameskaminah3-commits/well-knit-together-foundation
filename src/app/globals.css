@@ -212,6 +212,25 @@ h3 { margin: 0; font-size: 26px; }
 .order-item strong { color: var(--green); }
 .finance-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .finance-metrics h3 { margin: 0 0 3px; font-size: 38px; }
+.communication-metrics { margin: 28px 0; }
+.communication-metrics .info-card { min-height: 142px; }
+.communication-metrics .info-card small { color: var(--muted); }
+.communication-readiness { margin-top: 0; }
+.compact-heading { margin-top: 38px; }
+.communications-list { display: grid; gap: 12px; margin-top: 20px; }
+.communication-row { padding: 22px 24px; border: 1px solid var(--line); border-radius: 20px; background: white; }
+.communication-row-main { display: flex; justify-content: space-between; gap: 24px; }
+.communication-row h3 { margin: 2px 0 5px; font-size: 18px; }
+.communication-recipient { margin: 0; font-size: 14px; }
+.communication-row-status { display: grid; align-content: start; justify-items: end; gap: 6px; white-space: nowrap; }
+.communication-status { padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: capitalize; }
+.communication-status-sent { color: #28603e; background: #e0f2e3; }
+.communication-status-queued { color: #79561b; background: #f8e9bb; }
+.communication-status-failed { color: #8b3434; background: #f8dddd; }
+.communication-status-skipped { color: #6b7070; background: #edf0ee; }
+.communication-row-meta { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 18px; color: var(--muted); font-size: 12px; }
+.communication-error { color: #8b3434; }
+.communication-id { overflow-wrap: anywhere; }
 .finance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; margin-top: 52px; }
 .finance-campaign-list { display: grid; gap: 10px; }
 .finance-campaign { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 15px 0; border-top: 1px solid var(--line); }

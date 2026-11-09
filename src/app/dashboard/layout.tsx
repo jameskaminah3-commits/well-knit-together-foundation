@@ -33,6 +33,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
           {(roles.includes("donor") || roles.includes("finance") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/giving">My giving</Link>}
           {(roles.includes("finance") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/finance">Finance</Link>}
           {(roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/admin">Administration</Link>}
+          {(roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/communications">Communications</Link>}
           {(roles.includes("program_manager") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/support">Support cases</Link>}
           {(roles.includes("program_manager") || roles.includes("marketplace_manager") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/engagement">Engagement</Link>}
           {(roles.includes("program_manager") || roles.includes("finance") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/reporting">Reporting & measurement</Link>}
