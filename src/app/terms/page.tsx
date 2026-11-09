@@ -1,0 +1,6 @@
+import { LegalPage } from "@/components/legal-page";
+
+export const metadata = { title: "Terms of use" };
+export default function TermsPage() {
+  return <LegalPage eyebrow="Terms of use" title="A clear agreement for using this space." intro="These terms keep the website, secure workspace, events, giving, and marketplace useful and respectful." updated="9 November 2026"><h2>Use the service respectfully</h2><p>Do not impersonate someone, submit information you do not have permission to share, attempt to bypass access controls, or interfere with the service.</p><h2>Information and availability</h2><p>Public information is provided in good faith and may change as programmes develop. A published page is not a promise of eligibility, funding, employment, or a guaranteed service outcome.</p><h2>Accounts and secure areas</h2><p>Keep sign-in details private and tell us promptly if access may be compromised. Staff access is role-limited and may require an authenticator step.</p><h2>Respect and safeguarding</h2><p>Threats, harassment, exploitation, and unsafe contact are not acceptable. If someone may be in immediate danger, contact local emergency services first, then use the foundation’s safeguarding route.</p><h2>Contact</h2><p>Questions about these terms can be sent through the <a href="/about#contact">foundation contact route</a>.</p></LegalPage>;
+}

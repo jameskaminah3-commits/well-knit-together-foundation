@@ -42,3 +42,11 @@ export function hasFinanceAccess(roles: AppRole[], assuranceLevel: string | null
 export function hasEngagementAccess(roles: AppRole[], assuranceLevel: string | null) {
   return assuranceLevel === "aal2" && (roles.includes("program_manager") || roles.includes("marketplace_manager") || hasAdminRole(roles));
 }
+
+export function hasReportingAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && (roles.includes("program_manager") || roles.includes("finance") || hasAdminRole(roles));
+}
+
+export function hasPartnerRole(roles: AppRole[]) {
+  return roles.includes("partner");
+}

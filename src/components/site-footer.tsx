@@ -15,18 +15,21 @@ export function SiteFooter() {
           <Link href="/programs">Our programs</Link>
           <Link href="/marketplace">Marketplace</Link>
           <Link href="/impact">Impact and reports</Link>
+          <Link href="/reports">Annual reports</Link>
+          <Link href="/resources">Guides and resources</Link>
           <Link href="/support">Request support</Link>
         </div>
         <div>
           <p className="footer-label">Get involved</p>
           <Link href="/donate">Donate</Link>
           <Link href="/login">Partner portal</Link>
+          <Link href="/feedback">Share feedback</Link>
           <Link href="/about#contact">Contact the foundation</Link>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} Well Knit Together Global Foundation</span>
-        <span>Serving communities across Kenya</span>
+        <span><Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link> · <Link href="/safeguarding">Safeguarding</Link> · <Link href="/refunds">Giving & refunds</Link></span>
       </div>
     </footer>
   );

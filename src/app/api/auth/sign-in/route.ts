@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { consumeRateLimit, requestKey } from "@/lib/security/rate-limit";
 
 function safeNextPath(value: unknown) {
   return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
@@ -8,6 +9,8 @@ function safeNextPath(value: unknown) {
 }
 
 export async function POST(request: NextRequest) {
+  const rate = consumeRateLimit(requestKey(request, "sign-in"), 8, 15 * 60 * 1000);
+  if (!rate.allowed) return NextResponse.json({ error: "Too many sign-in attempts. Please wait and try again." }, { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } });
   const body = await request.json().catch(() => null) as { email?: unknown; password?: unknown; nextPath?: unknown } | null;
   const email = typeof body?.email === "string" ? body.email.trim() : "";
   const password = typeof body?.password === "string" ? body.password : "";
@@ -34,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+    return NextResponse.json({ error: "Those sign-in details were not recognized." }, { status: 401 });
   }
 
   return response;

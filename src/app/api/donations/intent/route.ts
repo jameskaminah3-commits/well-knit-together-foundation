@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminActor } from "@/lib/auth/admin-access";
+import { consumeRateLimit, isValidEmail, requestKey } from "@/lib/security/rate-limit";
 
 type DonationIntentPayload = {
   campaign_id?: string;
@@ -12,11 +13,10 @@ type DonationIntentPayload = {
   consent_to_updates?: boolean;
 };
 
-function validEmail(value: string) {
-  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
 export async function POST(request: Request) {
+  const rate = consumeRateLimit(requestKey(request, "donation-intent"), 10);
+  if (!rate.allowed) return NextResponse.json({ error: "Please wait before starting another giving attempt." }, { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } });
+  if (process.env.NODE_ENV === "production" && process.env.PAYMENT_PROVIDER_ENABLED !== "true") return NextResponse.json({ error: "Secure giving checkout is temporarily unavailable. Please try again later or contact the foundation." }, { status: 503 });
   const actor = await getAdminActor();
   const payload = await request.json().catch(() => null) as DonationIntentPayload | null;
   const amount = Number(payload?.amount);
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   if (!Number.isFinite(amount) || amount < 50 || amount > 5000000) return NextResponse.json({ error: "Choose an amount between KES 50 and KES 5,000,000." }, { status: 400 });
   if (currency !== "KES") return NextResponse.json({ error: "This giving journey currently accepts KES only." }, { status: 400 });
-  if (email && !validEmail(email)) return NextResponse.json({ error: "Enter a valid receipt email or leave it blank." }, { status: 400 });
+  if (email && !isValidEmail(email)) return NextResponse.json({ error: "Enter a valid receipt email or leave it blank." }, { status: 400 });
   if (idempotencyKey.length < 12 || idempotencyKey.length > 120) return NextResponse.json({ error: "A valid payment request key is required." }, { status: 400 });
 
   const { data: campaign, error: campaignError } = await actor.supabase

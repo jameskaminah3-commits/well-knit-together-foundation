@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { getAdminActor, hasCaseAccess } from "@/lib/auth/admin-access";
+import { consumeRateLimit, isValidEmail, requestKey } from "@/lib/security/rate-limit";
 import { beneficiaryGroups, needCategories, urgencyOptions } from "@/lib/support";
 import type { BeneficiaryGroup } from "@/types/domain";
+import { deliverTransactionalEmail } from "@/lib/email/service";
+import { supportReceived } from "@/lib/email/templates";
 
 type SupportPayload = {
   beneficiary_group?: BeneficiaryGroup;
@@ -25,6 +28,8 @@ const urgencies: Set<string> = new Set(urgencyOptions.map(([value]) => value));
 const contactMethods: Set<string> = new Set(["phone", "email", "sms", "whatsapp", "none"]);
 
 export async function POST(request: Request) {
+  const rate = consumeRateLimit(requestKey(request, "support-request"), 5);
+  if (!rate.allowed) return NextResponse.json({ error: "Please wait before sending another request." }, { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } });
   const actor = await getAdminActor();
   const payload = await request.json().catch(() => null) as SupportPayload | null;
   const description = payload?.description?.trim() ?? "";
@@ -47,6 +52,7 @@ export async function POST(request: Request) {
   if (consentToContact && (!payload?.preferred_contact_method || !contactMethods.has(payload.preferred_contact_method) || payload.preferred_contact_method === "none")) {
     return NextResponse.json({ error: "Choose a preferred contact method when giving contact consent." }, { status: 400 });
   }
+  if (payload?.contact_email && (typeof payload.contact_email !== "string" || !isValidEmail(payload.contact_email.trim()) || payload.contact_email.trim().length > 254)) return NextResponse.json({ error: "Enter a valid contact email or leave it blank." }, { status: 400 });
 
   const authenticatedChannel = requestedChannel === "assisted" ? "assisted" : actor.user ? "account" : "web";
   const record = {
@@ -71,5 +77,10 @@ export async function POST(request: Request) {
 
   const { data, error } = await actor.supabase.from("support_requests").insert(record as never).select("id").single();
   if (error) return NextResponse.json({ error: "We could not save the request. Please try again or contact the foundation directly." }, { status: 400 });
-  return NextResponse.json({ ok: true, id: data.id, reference: data.id.slice(0, 8).toUpperCase() }, { status: 201 });
+  const reference = data.id.slice(0, 8).toUpperCase();
+  if (consentToContact && record.contact_email && record.preferred_contact_method === "email") {
+    const email = supportReceived(reference);
+    await deliverTransactionalEmail({ messageType: "support_request_received", to: record.contact_email, subject: email.subject, html: email.html, text: email.text, dedupeKey: `support-request-received:${data.id}` });
+  }
+  return NextResponse.json({ ok: true, id: data.id, reference }, { status: 201 });
 }

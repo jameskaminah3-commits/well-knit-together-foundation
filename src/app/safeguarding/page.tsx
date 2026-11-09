@@ -1,0 +1,6 @@
+import { LegalPage } from "@/components/legal-page";
+
+export const metadata = { title: "Safeguarding" };
+export default function SafeguardingPage() {
+  return <LegalPage eyebrow="Safeguarding" title="Safety is part of every doorway." intro="We centre dignity, consent, and the best interests of children and adults who may be at risk." updated="9 November 2026"><h2>What we expect</h2><p>People working with the foundation should listen, respect boundaries, avoid private one-to-one contact where a safer arrangement is possible, and never trade help for access, money, images, or personal attention.</p><h2>When a concern is raised</h2><p>We record the minimum necessary information, limit access, preserve dignity, and route the concern to a designated safeguarding lead for human review. We do not publish incident details or ask a public form to carry an emergency.</p><h2>Urgent danger</h2><p>If someone is in immediate danger, contact local emergency services or a trusted local protection service first. Then use the foundation’s <a href="/about#contact">contact route</a> and say “safeguarding” so the message is triaged appropriately.</p><h2>Consent and stories</h2><p>Service consent, photography or story consent, and communications consent are separate choices. A person can withdraw a story or image request without losing access to support.</p></LegalPage>;
+}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminActor, hasContentAccess } from "@/lib/auth/admin-access";
 
-type ContentPayload = { id?: string; content_type?: "news" | "event" | "report" | "resource"; slug?: string; title?: string; excerpt?: string; body?: string; status?: "draft" | "pending_review" | "published" | "archived"; location?: string; starts_at?: string | null; ends_at?: string | null; scheduled_for?: string | null; file_path?: string | null; seo_title?: string; seo_description?: string };
+type ContentPayload = { id?: string; content_type?: "news" | "event" | "report" | "resource"; slug?: string; title?: string; excerpt?: string; body?: string; status?: "draft" | "pending_review" | "published" | "archived"; location?: string; starts_at?: string | null; ends_at?: string | null; scheduled_for?: string | null; file_path?: string | null; report_year?: string | number | null; report_category?: "annual" | "financial" | "programme" | "evidence" | null; evidence_label?: string | null; seo_title?: string; seo_description?: string };
 
 function state(status: ContentPayload["status"] = "draft") {
   if (status === "pending_review" || status === "published") return { status: "draft" as const, review_status: "pending_review" as const };
@@ -9,7 +9,7 @@ function state(status: ContentPayload["status"] = "draft") {
 }
 
 function record(payload: ContentPayload, userId?: string) {
-  return { content_type: payload.content_type, slug: payload.slug?.trim().toLowerCase(), title: payload.title?.trim(), excerpt: payload.excerpt?.trim(), body: payload.body?.trim(), ...state(payload.status), location: payload.location?.trim() || null, starts_at: payload.starts_at || null, ends_at: payload.ends_at || null, scheduled_for: payload.scheduled_for || null, file_path: payload.file_path || null, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null, ...(userId ? { created_by: userId } : {}) };
+  return { content_type: payload.content_type, slug: payload.slug?.trim().toLowerCase(), title: payload.title?.trim(), excerpt: payload.excerpt?.trim(), body: payload.body?.trim(), ...state(payload.status), location: payload.location?.trim() || null, starts_at: payload.starts_at || null, ends_at: payload.ends_at || null, scheduled_for: payload.scheduled_for || null, file_path: payload.file_path || null, report_year: payload.report_year ? Number(payload.report_year) : null, report_category: payload.report_category || null, evidence_label: payload.evidence_label?.trim() || null, seo_title: payload.seo_title?.trim() || null, seo_description: payload.seo_description?.trim() || null, ...(userId ? { created_by: userId } : {}) };
 }
 
 async function authorize() {

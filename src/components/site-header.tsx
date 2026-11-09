@@ -16,9 +16,11 @@ export function SiteHeader() {
           <Link href="/about">About</Link>
           <Link href="/programs">Programs</Link>
           <Link href="/impact">Impact</Link>
+          <Link href="/reports">Reports</Link>
           <Link href="/support">Request support</Link>
           <Link href="/marketplace">Marketplace</Link>
           <Link href="/engage">Engage</Link>
+          <Link href="/resources">Resources</Link>
           <Link href="/news">News</Link>
         </nav>
         <div className="header-actions">
@@ -30,9 +32,11 @@ export function SiteHeader() {
               <Link href="/about">About</Link>
               <Link href="/programs">Programs</Link>
               <Link href="/impact">Impact</Link>
+              <Link href="/reports">Reports</Link>
               <Link href="/support">Request support</Link>
               <Link href="/marketplace">Marketplace</Link>
               <Link href="/engage">Engage</Link>
+              <Link href="/resources">Resources</Link>
               <Link href="/news">News</Link>
               <Link href="/login">Sign in</Link>
             </nav>

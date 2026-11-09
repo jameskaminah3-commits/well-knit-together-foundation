@@ -8,6 +8,9 @@
 - Public event catalogue with dates, locations, capacity, deadlines, and registration links.
 - Event registration function with duplicate-email protection, capacity-aware waitlisting, and authenticated-user association when available.
 - Staff engagement dashboard for approved programme, marketplace, and administrator roles with MFA assurance.
+- Staff workflows for application review, partner due diligence, programme assignment, volunteer assignment, and event attendance.
+- Segmented in-app notifications for all users, roles, counties, and assigned programmes.
+- Partner workspace that exposes only explicitly assigned programmes and referrals.
 - RLS policies and explicit grants for all engagement tables.
 - Three sample events seeded for local review.
 - Homepage visual placements (`home_hero`, `home_story_main`, `home_story_support`) are wired to the approved media library.
@@ -22,6 +25,6 @@
 ## Before production
 
 - Replace sample imagery with rights-cleared maker uploads through the media library.
-- Add staff workflows for application review, assignment, attendance, and partner-specific access.
-- Add notification delivery and resource-library content.
+- Connect notification records to an approved email/SMS provider after consent, provider, and delivery-failure review.
+- Publish rights-cleared guides and evidence files through the content studio.
 - Complete RLS and authorization regression tests in Phase 9.

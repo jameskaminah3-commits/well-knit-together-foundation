@@ -158,7 +158,7 @@ Deliverables:
 
 Acceptance: partners and volunteers can apply, be approved, participate, and receive only appropriate information.
 
-Current status: the Phase 7 public engagement landing, partner and volunteer application forms, seeded learning events with registration, staff-only engagement dashboard, and RLS-backed engagement migrations are implemented. The marketplace also carries clearly labelled sample reference imagery and a refreshed ink-teal, terracotta, and warm-paper palette. Replace sample imagery with rights-cleared maker uploads before launch.
+Current status: Phase 7 is implemented through the public engagement landing, partner and volunteer application forms, seeded learning events with registration, staff review/due-diligence/assignment/attendance workflows, segmented in-app notifications, a least-privilege partner workspace, and RLS-backed engagement migrations. The marketplace also carries clearly labelled sample reference imagery and a refreshed ink-teal, terracotta, and warm-paper palette. Replace sample imagery with rights-cleared maker uploads before launch.
 
 ### Phase 8 — Reporting, transparency, and measurement
 
@@ -174,6 +174,8 @@ Deliverables:
 - Data-quality checks and change history.
 
 Acceptance: internal dashboards support decisions and public reports contain no re-identifiable beneficiary information.
+
+Current status: Phase 8 is implemented through the indicator dictionary, programme outcome model, validated observation intake, data-quality checks and history, county/programme/population dimensions, staff reporting workspace, approved public aggregates, and report/evidence publishing surfaces. Apply `supabase/migrations/0011_phase7_phase8_reporting.sql`, run the seed, and complete the operating checklist in `docs/PHASE_08_REPORTING.md` before production acceptance.
 
 ### Phase 9 — Security, reliability, and production readiness
 
@@ -206,6 +208,20 @@ Deliverables:
 - Release checklist, changelog, support ownership, and quarterly roadmap review.
 
 Acceptance: staged release, monitored launch, rollback path, and named owner for every operational surface.
+
+Current status: Phase 9/10 foundations are implemented through security headers, health/readiness checks, public feedback with consent and RLS, graceful error states, plain-language policy routes, sitemap coverage, CI validation, and a Railway deployment profile. Complete the environment separation, managed monitoring, restore drill, independent RLS matrix, policy review, and named-ownership checklist in `docs/PHASE_09_SECURITY.md` and `docs/PHASE_10_OPERATIONS.md` before production launch.
+
+### Phase 11 — Resend email delivery
+
+Goal: provide calm, useful, privacy-safe transactional communication.
+
+Deliverables:
+
+- Shared Resend delivery service with branded HTML and plain-text templates.
+- Delivery ledger, deduplication keys, provider webhooks, and email preference foundations.
+- Application coverage for support, feedback, engagement, event, giving, and marketplace workflows.
+
+Acceptance: apply `supabase/migrations/0013_resend_email_delivery.sql`, configure Resend, connect Supabase Auth custom SMTP, register the signed webhook, and verify delivery and failure events in staging.
 
 ## Non-negotiable security rules
 

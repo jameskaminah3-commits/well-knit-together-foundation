@@ -35,6 +35,8 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
           {(roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/admin">Administration</Link>}
           {(roles.includes("program_manager") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/support">Support cases</Link>}
           {(roles.includes("program_manager") || roles.includes("marketplace_manager") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/engagement">Engagement</Link>}
+          {(roles.includes("program_manager") || roles.includes("finance") || roles.includes("admin") || roles.includes("superadmin")) && <Link href="/dashboard/reporting">Reporting & measurement</Link>}
+          {roles.includes("partner") && <Link href="/dashboard/partner">Partner workspace</Link>}
           {(roles.includes("content_editor") || roles.includes("admin") || roles.includes("superadmin")) && <><Link href="/dashboard/content">Content studio</Link><Link href="/dashboard/content/media">Media library</Link></>}
         </nav>
         <div className="dashboard-user">
