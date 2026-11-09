@@ -52,6 +52,9 @@ export default async function CommunicationsPage() {
     .limit(100);
 
   const messages = (data ?? []) as EmailMessage[];
+  const deliveryReady = emailDeliveryConfigured();
+  const webhookReady = emailWebhookConfigured();
+  const deliveryRequired = process.env.REQUIRE_EMAIL_DELIVERY === "true";
   const counts = {
     sent: messages.filter((message) => message.status === "sent").length,
     delivered: messages.filter((message) => message.delivery_status === "delivered").length,
@@ -79,11 +82,30 @@ export default async function CommunicationsPage() {
       <div className="dashboard-notice communication-readiness">
         <div>
           <strong>Provider readiness</strong>
-          <p>Resend delivery: {emailDeliveryConfigured() ? "configured" : "awaiting credentials"}. Webhook verification: {emailWebhookConfigured() ? "configured" : "awaiting signing secret"}.</p>
+          <p>Resend delivery: {deliveryReady ? "configured" : "awaiting credentials"}. Webhook verification: {webhookReady ? "configured" : "awaiting signing secret"}.</p>
         </div>
-        <span className={`status-badge ${emailDeliveryConfigured() && emailWebhookConfigured() ? "status-published" : "status-pending_review"}`}>
-          {emailDeliveryConfigured() && emailWebhookConfigured() ? "Ready" : "Setup required"}
+        <span className={`status-badge ${deliveryReady && webhookReady ? "status-published" : "status-pending_review"}`}>
+          {deliveryReady && webhookReady ? "Ready" : "Setup required"}
         </span>
+      </div>
+
+      <div className="communications-setup-grid">
+        <article className="info-card communications-setup-card">
+          <p className="eyebrow">Launch checklist</p>
+          <h2>Ready the sending layer</h2>
+          <div className="communications-checklist">
+            <div className="communications-checklist-row"><span><strong>Resend sending</strong><small>API key and verified sender</small></span><span className={`status-badge ${deliveryReady ? "status-published" : "status-pending_review"}`}>{deliveryReady ? "Ready" : "Configure"}</span></div>
+            <div className="communications-checklist-row"><span><strong>Delivery webhooks</strong><small>Signed provider events</small></span><span className={`status-badge ${webhookReady ? "status-published" : "status-pending_review"}`}>{webhookReady ? "Ready" : "Configure"}</span></div>
+            <div className="communications-checklist-row"><span><strong>Supabase Auth SMTP</strong><small>Verification, recovery, and invites</small></span><span className="status-badge status-pending_review">Manual</span></div>
+            <div className="communications-checklist-row"><span><strong>Fail-closed delivery</strong><small>Require email config in production</small></span><span className={`status-badge ${deliveryRequired ? "status-published" : "status-pending_review"}`}>{deliveryRequired ? "Enabled" : "Optional"}</span></div>
+          </div>
+        </article>
+        <article className="info-card communications-setup-card communications-setup-note">
+          <p className="eyebrow">Safety by design</p>
+          <h2>What this workspace does not show</h2>
+          <p className="muted">Message bodies, support narratives, safeguarding details, and provider secrets stay outside this operational view.</p>
+          <p className="muted">Use the delivery ledger to confirm outcomes, then investigate sensitive records in their role-specific workspace.</p>
+        </article>
       </div>
 
       <div className="section-heading compact-heading">
