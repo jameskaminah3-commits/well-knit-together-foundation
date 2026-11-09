@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1"],
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "www.thebasketroom.com" },
+      { protocol: "https", hostname: "pcer.shorthandstories.com" },
+      { protocol: "https", hostname: "images.squarespace-cdn.com" },
+      { protocol: "https", hostname: "*.supabase.co" },
+    ],
+  },
   async headers() {
     const isProduction = process.env.NODE_ENV === "production";
     const scriptPolicy = isProduction ? "'self' 'unsafe-inline'" : "'self' 'unsafe-inline' 'unsafe-eval'";

@@ -25,3 +25,13 @@ Phase 10 makes launch deliberate: the public experience stays calm and premium w
 - [ ] Staff owner named for support, safeguarding, finance, content, and incident response.
 - [ ] Feedback reviewed weekly during launch, then included in a quarterly roadmap review.
 - [ ] Analytics, if enabled, measure useful outcomes without collecting sensitive case details.
+
+## Release verification
+
+Run the same gate locally and in CI before promoting a build:
+
+```bash
+npm run verify
+```
+
+This checks high-severity dependency advisories, lint, TypeScript, and the production build. A passing command validates the repository; it does not replace staging checks for Supabase RLS, payment callbacks, Resend delivery, backups, or restore procedures.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SectionHeading } from "@/components/section-heading";
 import { getFoundationVisuals } from "@/lib/home-visuals";
 import { corePrograms, focusGroups, foundation } from "@/lib/site";
@@ -20,7 +21,7 @@ export default async function HomePage() {
             <div className="hero-proof"><span><strong>5</strong> counties in our initial footprint</span><span><strong>4</strong> connected impact pillars</span></div>
           </div>
           <div className="hero-visual">
-            <img src={foundationVisuals[0].src} alt={foundationVisuals[0].alt} />
+            <Image src={foundationVisuals[0].src} alt={foundationVisuals[0].alt} fill priority sizes="(max-width: 850px) 100vw, 50vw" />
             <div className="hero-visual-overlay"><span className="eyebrow">{foundationVisuals[0].label}</span><strong>When people have room to make, care, and lead.</strong><small>{foundationVisuals[0].credit}</small></div>
           </div>
         </div>
@@ -29,8 +30,8 @@ export default async function HomePage() {
       <section className="section home-introduction">
         <div className="container split home-introduction-grid">
           <div className="home-photo-stack">
-            <figure className="home-photo home-photo-main"><img src={foundationVisuals[1].src} alt={foundationVisuals[1].alt} /><figcaption>{foundationVisuals[1].credit}</figcaption></figure>
-            <figure className="home-photo home-photo-small"><img src={foundationVisuals[2].src} alt={foundationVisuals[2].alt} /><figcaption>{foundationVisuals[2].credit}</figcaption></figure>
+            <figure className="home-photo home-photo-main"><Image src={foundationVisuals[1].src} alt={foundationVisuals[1].alt} fill sizes="(max-width: 560px) 90vw, 48vw" /><figcaption>{foundationVisuals[1].credit}</figcaption></figure>
+            <figure className="home-photo home-photo-small"><Image src={foundationVisuals[2].src} alt={foundationVisuals[2].alt} fill sizes="(max-width: 560px) 52vw, 24vw" /><figcaption>{foundationVisuals[2].credit}</figcaption></figure>
           </div>
           <div className="home-introduction-copy"><p className="eyebrow">Our reason for being</p><h2>Every person has a place in the circle.</h2><p className="lead muted">Well Knit Together exists to make support feel practical, dignified, and connected—especially for caregivers, children, women, and people with disabilities.</p><p className="muted">We listen first, build capacity alongside communities, and connect care with opportunity. The result is not a single service. It is a stronger local web of people, skills, and choices.</p><Link className="card-link" href="/about">Learn what guides us →</Link></div>
         </div>
