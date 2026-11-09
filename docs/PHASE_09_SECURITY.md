@@ -15,6 +15,7 @@ Phase 9 turns the foundation from a feature-complete webapp into a service that 
 ## Before production acceptance
 
 - Run an independent RLS matrix against anonymous, beneficiary, partner, volunteer, staff, and AAL2 admin sessions.
+- Run `npm run security:smoke` against staging with the publishable Supabase environment to verify public reads remain public while sensitive tables return no anonymous data. This is an anonymous smoke check, not a replacement for the full role matrix.
 - Turn on dependency and secret scanning in CI; never place a service-role key in browser code.
 - Configure managed rate limiting, error monitoring, uptime checks, backups, and a tested restore drill.
 - Run payment failure, duplicate payment, account recovery, export approval, and unauthorized access tests.

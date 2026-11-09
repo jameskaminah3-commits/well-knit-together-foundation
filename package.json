@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "audit:high": "npm audit --audit-level=high",
-    "verify": "npm run audit:high && npm run lint && npm run typecheck && npm run build"
+    "security:smoke": "node scripts/security-smoke.mjs",
+    "verify": "npm run audit:high && npm run lint && npm run typecheck && npm run security:smoke && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
