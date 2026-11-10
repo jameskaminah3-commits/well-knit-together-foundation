@@ -7,7 +7,7 @@
 - Region: Central EU (Frankfurt)
 - Dashboard: https://supabase.com/dashboard/project/dqgpglhklidojslmrbhu
 
-The initial schema and seed data are already applied. The database currently contains the 10 foundation tables and the three published starter programs.
+Treat this project as development or staging. Production should be a separate Supabase project that never receives the demo seed.
 
 ## Run the webapp
 
@@ -32,3 +32,40 @@ For Phase 2 authentication testing, configure Supabase Authentication → URL Co
 ## Schema workflow
 
 Add future database changes as ordered files under `supabase/migrations/`. Apply them through the Supabase SQL Editor for now. The Phase 7/8 completion migration is `0011_phase7_phase8_reporting.sql`; run it after the existing migrations, then run `supabase/seed.sql` so the indicator dictionary and programme-indicator assignments are available. When the Supabase CLI is introduced, link it to project ref `dqgpglhklidojslmrbhu` and use migration history rather than editing the live schema manually.
+
+## Demo data
+
+`supabase/seed.sql` fills a local or staging database with a realistic, entirely fictional year of activity across Mombasa, Kilifi, Kwale, Tana River, and Kajiado. It includes caregivers' support cases and referrals, partner and volunteer applications, events with attendance, an active school-fees appeal with M-Pesa gifts and receipts, three maker groups with a shop catalogue (original illustrations in `public/demo/products`), stories, news, resources, reports, and approved impact figures.
+
+It also creates one account per role. Every account uses the password `WellKnit-Demo-2026!`.
+
+| Email | Name | Role |
+| --- | --- | --- |
+| superadmin@demo.wellknit.test | Amani Mwakio | Super administrator |
+| admin@demo.wellknit.test | Rehema Chari | Administrator |
+| programs@demo.wellknit.test | Zawadi Kahindi | Program manager |
+| finance@demo.wellknit.test | Baraka Mwinyi | Finance |
+| shop@demo.wellknit.test | Saumu Bakari | Marketplace manager |
+| editor@demo.wellknit.test | Neema Wairimu | Content editor |
+| donor@demo.wellknit.test | Ruth Kamau | Donor (also a volunteer) |
+| partner@demo.wellknit.test | Fatma Said | Partner, Pwani Inclusive Therapy Collective |
+| volunteer@demo.wellknit.test | Brian Kiprono | Volunteer |
+| caregiver@demo.wellknit.test | Mwanajuma Hamisi | Caregiver / beneficiary |
+
+Staff tools stay locked until the account has two-step verification. Sign in, open **Security**, scan the QR code with any authenticator app, and enter the code.
+
+### Loading it
+
+With the Supabase CLI (Docker required), `supabase start` followed by `supabase db reset` applies every migration and then the seed. For a hosted staging project, run each file in `supabase/migrations` in order, then `supabase/seed.sql`, in the SQL editor.
+
+The seed refuses to run if the database already has any non-demo user. Before a staging project goes live, run `supabase/remove_demo_seed.sql` to remove every demo account and record. The three starter programmes are kept.
+
+### Checking role access
+
+After loading the seed, run the role regression tests:
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/role_access.sql
+```
+
+Every line should start with `ok`. See `docs/ROLES.md` for what each role can do.

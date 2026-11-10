@@ -50,8 +50,8 @@ The people most likely to use the site are caregivers on low-cost Android phones
 
 1. **Official contact channels.** Set `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_CONTACT_WHATSAPP`, `NEXT_PUBLIC_CONTACT_EMAIL`, and `NEXT_PUBLIC_SAFEGUARDING_EMAIL` in Railway, then redeploy (they are read at build time). The registration record lists the chairperson's personal mobile as the organisation's telephone; a dedicated foundation line and inbox are strongly recommended.
 2. **Giving details.** Set the Paybill/Till and bank variables. Use only accounts registered in the foundation's name.
-3. **Online payments are not implemented.** `/api/donations/intent` and `/api/marketplace/orders` record intents but never open a checkout. Keep `PAYMENT_PROVIDER_ENABLED=false` until an M-Pesa Daraja (STK Push) or card provider integration exists. Daraja callbacks are not HMAC-signed, so the current webhook needs a provider adapter.
-4. **Apply migration `0014`** to the production Supabase project.
+3. **Connect M-Pesa.** Online giving now uses M-Pesa Express (STK Push). The super administrator saves the Daraja credentials under **Payment settings**, tests the connection, and switches online giving on. Start in the Daraja sandbox, then switch to production credentials once Safaricom has approved the shortcode for M-Pesa Express. `PAYMENT_ENCRYPTION_KEY`, `PAYMENT_WEBHOOK_SECRET`, and an https `NEXT_PUBLIC_SITE_URL` are required.
+4. **Apply migrations `0014` to `0018`** to the production Supabase project. Never load `supabase/seed.sql` there.
 5. **Content:** publish real programs, consented stories, and homepage photographs through the content studio and media library. Publish the first annual report after the financial year closes on 31 December.
 6. **Data protection:** register with the ODPC as a data controller (charitable organisations processing health data are generally required to), have counsel review the privacy notice, and name a data-protection contact.
 7. **Safeguarding:** adopt a written policy, name a safeguarding lead, set the safeguarding email, and review the helpline numbers every year.
@@ -77,3 +77,14 @@ The people most likely to use the site are caregivers on low-cost Android phones
 - Every public route returns 200; sample products and events return 404 in production.
 - DOM audit across 17 pages: no unlabelled controls, missing alt text, empty links, or skipped heading levels.
 - WCAG contrast computed for all text and background pairs (≥ 4.5:1).
+
+## Follow-up: role dashboards and payments (November 2026)
+
+A second pass signed in as every role against the real database rules. It found and fixed four database bugs that broke staff workspaces:
+
+- Case notes could not be saved.
+- Event registrations were unreadable for everyone.
+- Audit entries from staff sessions were dropped.
+- Shop stock reservations never cleared.
+
+It also filled missing workspaces: Shop, My volunteering, partner referral responses, finance's direct-gift recording, and community role assignment. Super administrator payment settings and M-Pesa Express were added too. Details are in `docs/ROLES.md`; `supabase/tests/role_access.sql` runs 36 access checks.

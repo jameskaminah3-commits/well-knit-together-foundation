@@ -48,8 +48,9 @@ For connected local development, see `docs/LOCAL_DEVELOPMENT.md`.
 Read `docs/PRODUCTION_REVIEW.md`. In short:
 
 - Set the public contact variables (`NEXT_PUBLIC_CONTACT_*`) and direct giving variables (`NEXT_PUBLIC_MPESA_*`, `NEXT_PUBLIC_BANK_*`) in Railway, then redeploy. They are read at build time.
-- Keep `PAYMENT_PROVIDER_ENABLED=false` until a real payment provider integration exists. `/donate` then shows the direct giving details.
-- Apply every migration in `supabase/migrations`, including `0014_production_content_hygiene.sql`, which retires the sample catalogue, events, and campaign.
+- Set `PAYMENT_ENCRYPTION_KEY`, `PAYMENT_WEBHOOK_SECRET`, and `SUPABASE_SERVICE_ROLE_KEY`. The super administrator then manages Paybill and bank details, M-Pesa Daraja credentials, and the online giving switch under **Payment settings** in the workspace.
+- Apply every migration in `supabase/migrations` in order (0001–0018). Migrations 0016–0018 fix case notes, event registrations, the audit trail, and shop stock.
 - Sample content appears only in local development (`next dev`). Production shows only approved records from Supabase.
+- Demo data and one account per role live in `supabase/seed.sql`, for local and staging use only. See `docs/LOCAL_DEVELOPMENT.md` and `docs/ROLES.md`.
 
 This is the foundation layer. Payment providers, case-management workflows, inventory mutations, notifications, and production integrations are deliberately documented as later phases rather than being faked in the UI.
