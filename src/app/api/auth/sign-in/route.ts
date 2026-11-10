@@ -1,12 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { consumeRateLimit, requestKey } from "@/lib/security/rate-limit";
-
-function safeNextPath(value: unknown) {
-  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
-    ? value
-    : "/dashboard";
-}
+import { safeNextPath } from "@/lib/security/redirect";
 
 export async function POST(request: NextRequest) {
   const rate = consumeRateLimit(requestKey(request, "sign-in"), 8, 15 * 60 * 1000);

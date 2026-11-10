@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-
-function safeNextPath(value: string | null) {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";
-}
+import { safeNextPath } from "@/lib/security/redirect";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

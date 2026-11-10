@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { previewContentAllowed } from "@/lib/site";
 import type { MarketplaceProduct } from "@/lib/marketplace-shared";
 export type { MarketplaceProduct } from "@/lib/marketplace-shared";
 export { availableStock, categoryLabel, formatMarketplaceMoney } from "@/lib/marketplace-shared";
@@ -10,7 +11,7 @@ const previewProducts: MarketplaceProduct[] = [
     name: "Woven warmth basket",
     description: "A structured handwoven basket with a quiet, natural finish for keeping everyday essentials close.",
     short_description: "A considered basket for the rhythm of everyday life.",
-    maker_story: "Made by a sample Kisumu maker collective, where shared production helps women build confidence, income, and room to plan ahead.",
+    maker_story: "Sample listing for local review: made by a caregiver maker group, where shared production helps women build confidence, income, and room to plan ahead.",
     impact_note: "Every purchase contributes to dependable market access and maker income.",
     price: 3200,
     currency: "KES",
@@ -19,8 +20,8 @@ const previewProducts: MarketplaceProduct[] = [
     status: "active",
     category_slug: "home",
     featured: true,
-    image_url: "https://copperbeechbythesea.com/cdn/shop/files/2P6A0891s_1024x1024.jpg?v=1727116726",
-    image_credit: "Sample reference image · Copper Beech by the Sea",
+    image_url: null,
+    image_credit: null,
     source: "preview",
   },
   {
@@ -38,8 +39,8 @@ const previewProducts: MarketplaceProduct[] = [
     status: "active",
     category_slug: "home",
     featured: true,
-    image_url: "https://www.mayanhands.org/cdn/shop/products/TTR-MORG_2048x.jpg?v=1621629222",
-    image_credit: "Sample reference image · Mayan Hands",
+    image_url: null,
+    image_credit: null,
     source: "preview",
   },
   {
@@ -57,23 +58,26 @@ const previewProducts: MarketplaceProduct[] = [
     status: "active",
     category_slug: "wearables",
     featured: false,
-    image_url: "https://i.etsystatic.com/32713828/r/il/953eb9/4569892430/il_600x600.4569892430_4c0a.jpg",
-    image_credit: "Sample reference image · Etsy listing",
+    image_url: null,
+    image_credit: null,
     source: "preview",
   },
 ];
 
-export async function getMarketplaceProducts() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select("id, slug, name, description, short_description, maker_story, impact_note, price, currency, stock_quantity, reserved_quantity, status, category_slug, featured, image_url, image_credit")
-    .eq("status", "active")
-    .order("featured", { ascending: false })
-    .order("created_at", { ascending: false });
-
-  if (!error && data?.length) return data.map((product) => ({ ...product, source: "database" })) as MarketplaceProduct[];
-  return previewProducts;
+export async function getMarketplaceProducts(): Promise<MarketplaceProduct[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, slug, name, description, short_description, maker_story, impact_note, price, currency, stock_quantity, reserved_quantity, status, category_slug, featured, image_url, image_credit")
+      .eq("status", "active")
+      .order("featured", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (!error && data?.length) return data.map((product) => ({ ...product, source: "database" })) as MarketplaceProduct[];
+  } catch {
+    // Fall through to local preview content in development only.
+  }
+  return previewContentAllowed() ? previewProducts : [];
 }
 
 export async function getMarketplaceProduct(slug: string) {

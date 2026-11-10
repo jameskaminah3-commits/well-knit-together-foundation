@@ -95,3 +95,10 @@ export function getPublicMediaUrl(path: string | null) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   return url ? `${url}/storage/v1/object/public/public-media/${path}` : null;
 }
+
+/** Resolves a stored file reference to a safe public download URL. */
+export function publicFileUrl(filePath: string | null) {
+  if (!filePath) return null;
+  if (filePath.startsWith("public-media/")) return getPublicMediaUrl(filePath.slice("public-media/".length));
+  return /^https:\/\//.test(filePath) ? filePath : null;
+}

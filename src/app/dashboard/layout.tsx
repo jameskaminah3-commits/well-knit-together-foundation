@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { BrandMark } from "@/components/brand-art";
 import { SignOutButton } from "@/components/sign-out-button";
 import { createClient } from "@/lib/supabase/server";
 import { roleLabels } from "@/lib/roles";
@@ -24,7 +25,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
   return (
     <div className="dashboard-shell">
       <aside className="dashboard-sidebar">
-        <Link className="dashboard-brand" href="/dashboard"><span className="brand-mark">WKT</span><span><strong>Well Knit Together</strong><small>Secure workspace</small></span></Link>
+        <Link className="dashboard-brand" href="/dashboard"><BrandMark size={40} /><span><strong>Well Knit Together</strong><small>Secure workspace</small></span></Link>
         <nav className="dashboard-nav" aria-label="Workspace navigation">
           <Link href="/dashboard">Overview</Link>
           <Link href="/dashboard/account">My account</Link>

@@ -14,5 +14,5 @@ export default async function ImpactStoryPage({ params }: { params: Promise<{ sl
   const { slug } = await params;
   const story = await getPublishedStory(slug);
   if (!story) notFound();
-  return <><section className="page-hero"><div className="container"><p className="eyebrow">Impact story</p><h1>{story.title}</h1><p>{story.excerpt}</p></div></section><article className="section"><div className="container story-body"><p>{story.body}</p></div></article></>;
+  return <><section className="page-hero"><div className="container"><p className="eyebrow">Impact story</p><h1>{story.title}</h1><p>{story.excerpt}</p></div></section><article className="section"><div className="container story-body">{story.body.split("\n").filter((paragraph) => paragraph.trim()).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></article></>;
 }

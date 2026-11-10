@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["localhost", "127.0.0.1"],
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "www.thebasketroom.com" },
-      { protocol: "https", hostname: "pcer.shorthandstories.com" },
-      { protocol: "https", hostname: "images.squarespace-cdn.com" },
       { protocol: "https", hostname: "*.supabase.co" },
     ],
   },

@@ -1,16 +1,92 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DonationForm } from "@/components/donation-form";
+import { Icon } from "@/components/icon";
 import { campaignProgress, formatMoney, getActiveCampaigns } from "@/lib/fundraising";
+import { contactChannels, directGiving, foundation, hasDirectGiving, onlinePaymentsEnabled, telHref, waysWeWork } from "@/lib/site";
 
-export const metadata = { title: "Give support" };
+export const metadata: Metadata = {
+  title: "Donate",
+  description: `Give to ${foundation.legalName} (Reg. ${foundation.registration.number}). Your gift funds training, equipment, school fees, and support for women caregivers of children with disabilities in Kenya.`,
+  alternates: { canonical: "/donate" },
+};
+export const dynamic = "force-dynamic";
+
+function DirectGiving() {
+  const configured = hasDirectGiving();
+  return (
+    <div className="direct-giving">
+      <div><p className="eyebrow">Give directly</p><h3>{configured ? "Give by M-Pesa or bank transfer." : "Talk to us about giving."}</h3></div>
+      {(directGiving.mpesaPaybill || directGiving.mpesaTill) && (
+        <div className="direct-giving-method">
+          <h4>M-Pesa</h4>
+          {directGiving.mpesaPaybill ? (
+            <ol>
+              <li>Open M-Pesa and choose <strong>Lipa na M-Pesa → Pay Bill</strong>.</li>
+              <li>Business number: <strong>{directGiving.mpesaPaybill}</strong></li>
+              <li>Account number: <strong>{directGiving.mpesaAccount ?? "DONATION"}</strong></li>
+              <li>Enter the amount and your M-Pesa PIN.</li>
+            </ol>
+          ) : (
+            <ol>
+              <li>Open M-Pesa and choose <strong>Lipa na M-Pesa → Buy Goods</strong>.</li>
+              <li>Till number: <strong>{directGiving.mpesaTill}</strong></li>
+              <li>Enter the amount and your M-Pesa PIN.</li>
+            </ol>
+          )}
+          <p className="form-note">Before you enter your PIN, check that M-Pesa shows the foundation’s name. Never send money to a personal number claiming to collect for us.</p>
+        </div>
+      )}
+      {directGiving.bankName && directGiving.bankAccountNumber && (
+        <div className="direct-giving-method">
+          <h4>Bank transfer</h4>
+          <dl>
+            <dt>Bank</dt><dd>{directGiving.bankName}</dd>
+            <dt>Account name</dt><dd>{directGiving.bankAccountName ?? foundation.legalName}</dd>
+            <dt>Account number</dt><dd>{directGiving.bankAccountNumber}</dd>
+            {directGiving.bankBranch && <><dt>Branch</dt><dd>{directGiving.bankBranch}</dd></>}
+            {directGiving.bankSwift && <><dt>SWIFT</dt><dd>{directGiving.bankSwift}</dd></>}
+          </dl>
+        </div>
+      )}
+      <p className="muted">{configured ? "For a receipt, or to give in kind, as a business, or from outside Kenya, contact us and we will help." : "Secure online giving is being connected. To give now, pledge support, give in kind, or fund a specific program, contact our team and we will share verified payment details."}</p>
+      <div className="button-row">
+        {contactChannels.phone && <a className="button button-small" href={telHref(contactChannels.phone)}>Call {contactChannels.phone}</a>}
+        {contactChannels.email && <a className="button button-small button-secondary" href={`mailto:${contactChannels.email}?subject=${encodeURIComponent("Giving to Well Knit Together")}`}>Email us</a>}
+        <Link className="button button-small button-secondary" href="/engage/partner">Become a funding partner</Link>
+      </div>
+    </div>
+  );
+}
 
 export default async function DonatePage() {
   const campaigns = await getActiveCampaigns();
   const campaign = campaigns[0];
+  const online = onlinePaymentsEnabled() && Boolean(campaign);
   return (
     <>
-      <section className="page-hero"><div className="container"><p className="eyebrow">Give support</p><h1>Help make care and opportunity possible.</h1><p>Your contribution supports caregiver-centred programs, training, inclusion, education, advocacy, and economic opportunity.</p></div></section>
-      <section className="section"><div className="container giving-layout"><div><p className="eyebrow">Our active campaign</p><h2>{campaign?.title ?? "A wider circle of care."}</h2><p className="lead muted">{campaign?.summary ?? "Your gift will help build a safer, more inclusive future for caregivers and communities."}</p>{campaign && <div className="campaign-progress"><div className="campaign-progress-heading"><strong>{formatMoney(campaign.raised_amount, campaign.currency)} raised</strong><span>{formatMoney(campaign.goal_amount, campaign.currency)} goal</span></div><div className="progress-track" aria-label={`${campaignProgress(campaign)} percent of campaign goal`}><span style={{ width: `${campaignProgress(campaign)}%` }} /></div><p className="form-note">Every gift is recorded against a campaign, reconciled against a provider reference, and eligible for a receipt after successful payment.</p></div>}<div className="giving-trust-grid"><article className="info-card"><p className="eyebrow">Transparent</p><h3>Clear campaign purpose</h3><p>See where your contribution sits in the foundation’s approved funding story.</p></article><article className="info-card"><p className="eyebrow">Protected</p><h3>No raw card data</h3><p>Hosted checkout and signed payment events keep payment details outside this app.</p></article></div></div>{campaign ? <><DonationForm campaignId={campaign.id} currency={campaign.currency} />{campaign.source === "preview" && <p className="form-note">Local preview mode: connect the Supabase project to record this gift intent.</p>}</> : <div className="empty-state"><h3>Giving is opening soon.</h3><p className="muted">A campaign will appear here once it is approved.</p><Link className="button" href="/about">Learn about the foundation</Link></div>}</div></section>
+      <section className="page-hero"><div className="container"><p className="eyebrow">Donate</p><h1>Help a caregiver keep going.</h1><p>Your gift funds the practical things that change a family’s week: training, equipment, school fees, and a support group that shows up.</p></div></section>
+      <section className="trust-strip"><div className="container trust-strip-inner"><span><strong>Registered Kenyan NGO</strong> · Reg. No. {foundation.registration.number}</span><span>Board-governed · Financial year {foundation.financialYear}</span><span><Link className="text-link" href="/reports">Annual reports published online →</Link></span></div></section>
+      <section className="section">
+        <div className="container giving-layout">
+          <div>
+            <p className="eyebrow">{campaign?.source === "database" ? "Our current appeal" : "Where your gift goes"}</p>
+            <h2>{campaign?.source === "database" ? campaign.title : "Every gift goes to work for caregivers."}</h2>
+            <p className="lead muted">{campaign?.source === "database" ? campaign.summary : "Gifts are used for our registered charitable purpose: improving the wellbeing, skills, and income of women caregivers of children with disabilities, and including their children in school and community life."}</p>
+            {campaign?.source === "database" && campaign.raised_amount > 0 && <div className="campaign-progress"><div className="campaign-progress-heading"><strong>{formatMoney(campaign.raised_amount, campaign.currency)} raised</strong><span>{formatMoney(campaign.goal_amount, campaign.currency)} goal</span></div><div className="progress-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={campaignProgress(campaign)} aria-label="Campaign progress"><span style={{ width: `${campaignProgress(campaign)}%` }} /></div></div>}
+            <ul className="giving-uses">
+              {waysWeWork.map((way) => <li key={way.title}><Icon name={way.icon} size={22} /><span><strong>{way.title}.</strong> {way.description}</span></li>)}
+            </ul>
+            <div className="giving-trust-grid" style={{ marginTop: 30 }}>
+              <article className="info-card"><p className="eyebrow">Accountable</p><h3>Reported every year</h3><p>Approved annual and financial reports are published for supporters and partners.</p></article>
+              <article className="info-card"><p className="eyebrow">Protected</p><h3>Safe payments</h3><p>We never see or store your card or M-Pesa PIN. Payments are handled by the provider.</p></article>
+            </div>
+          </div>
+          <div>
+            {online && campaign ? <><DonationForm campaignId={campaign.id} currency={campaign.currency} />{campaign.source === "preview" && <p className="form-note">Local preview: connect Supabase to record this gift intent.</p>}{hasDirectGiving() && <div style={{ marginTop: 18 }}><DirectGiving /></div>}</> : <DirectGiving />}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

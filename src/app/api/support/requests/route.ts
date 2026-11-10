@@ -52,6 +52,12 @@ export async function POST(request: Request) {
   if (consentToContact && (!payload?.preferred_contact_method || !contactMethods.has(payload.preferred_contact_method) || payload.preferred_contact_method === "none")) {
     return NextResponse.json({ error: "Choose a preferred contact method when giving contact consent." }, { status: 400 });
   }
+  if (consentToContact && ["phone", "sms", "whatsapp"].includes(payload?.preferred_contact_method ?? "") && !(typeof payload?.contact_phone === "string" && payload.contact_phone.trim())) {
+    return NextResponse.json({ error: "Add a phone number so we can reach you by phone, SMS, or WhatsApp." }, { status: 400 });
+  }
+  if (consentToContact && payload?.preferred_contact_method === "email" && !(typeof payload?.contact_email === "string" && payload.contact_email.trim())) {
+    return NextResponse.json({ error: "Add an email address so we can reply by email." }, { status: 400 });
+  }
   if (payload?.contact_email && (typeof payload.contact_email !== "string" || !isValidEmail(payload.contact_email.trim()) || payload.contact_email.trim().length > 254)) return NextResponse.json({ error: "Enter a valid contact email or leave it blank." }, { status: 400 });
 
   const authenticatedChannel = requestedChannel === "assisted" ? "assisted" : actor.user ? "account" : "web";
