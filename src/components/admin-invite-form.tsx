@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { staffRoles, roleLabels } from "@/lib/roles";
 import type { AppRole } from "@/types/domain";
 
-export function AdminInviteForm() {
+export function AdminInviteForm({ canInviteSuperadmin = false }: { canInviteSuperadmin?: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<AppRole>("content_editor");
@@ -23,5 +23,5 @@ export function AdminInviteForm() {
     setBusy(false);
   }
 
-  return <form className="admin-form" onSubmit={submit}><div><label>Email address<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required placeholder="colleague@example.org" /></label></div><div><label>Staff role<select value={role} onChange={(event) => setRole(event.target.value as AppRole)}>{staffRoles.map((item) => <option key={item} value={item}>{roleLabels[item]}</option>)}</select></label></div><button className="button button-small" type="submit" disabled={busy}>{busy ? "Sending…" : "Send invite"}</button>{error && <p className="form-alert form-alert-error" role="alert">{error}</p>}{message && <p className="form-alert form-alert-success" role="status">{message}</p>}</form>;
+  return <form className="admin-form" onSubmit={submit}><div><label>Email address<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required placeholder="colleague@example.org" /></label></div><div><label>Staff role<select value={role} onChange={(event) => setRole(event.target.value as AppRole)}>{staffRoles.filter((item) => item !== "superadmin" || canInviteSuperadmin).map((item) => <option key={item} value={item}>{roleLabels[item]}</option>)}</select></label></div><button className="button button-small" type="submit" disabled={busy}>{busy ? "Sending…" : "Send invite"}</button>{error && <p className="form-alert form-alert-error" role="alert">{error}</p>}{message && <p className="form-alert form-alert-success" role="status">{message}</p>}</form>;
 }
