@@ -67,15 +67,6 @@ export const directGiving = {
   bankSwift: env(process.env.NEXT_PUBLIC_BANK_SWIFT),
 };
 
-export function hasDirectGiving() {
-  return Boolean(directGiving.mpesaPaybill || directGiving.mpesaTill || (directGiving.bankName && directGiving.bankAccountNumber));
-}
-
-/** Online checkout is only offered where a payment provider is connected. */
-export function onlinePaymentsEnabled() {
-  return process.env.NODE_ENV !== "production" || process.env.PAYMENT_PROVIDER_ENABLED === "true";
-}
-
 /** Sample catalogue, events and campaigns are only for local design review. */
 export function previewContentAllowed() {
   return process.env.NODE_ENV !== "production";

@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { deliverTransactionalEmail } from "@/lib/email/service";
 import { orderCreated } from "@/lib/email/templates";
+import { marketplaceOrdersOpen } from "@/lib/payments/settings";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Sign in before starting checkout." }, { status: 401 });
-  if (process.env.NODE_ENV === "production" && process.env.PAYMENT_PROVIDER_ENABLED !== "true") return Response.json({ error: "Secure checkout is temporarily unavailable. Please try again later." }, { status: 503 });
+  if (!(await marketplaceOrdersOpen())) return Response.json({ error: "Online ordering is not open yet. Please contact us to order." }, { status: 503 });
 
   const body = await request.json().catch(() => null) as { items?: unknown; shippingDetails?: unknown } | null;
   const items = Array.isArray(body?.items) ? body.items : [];
@@ -26,5 +27,5 @@ export async function POST(request: Request) {
     const email = orderCreated({ orderId: order.id, total: Number(order.total_amount).toLocaleString("en-KE", { minimumFractionDigits: 2 }), currency: order.currency });
     await deliverTransactionalEmail({ messageType: "order_created", to: order.customer_email, subject: email.subject, html: email.html, text: email.text, dedupeKey: `order-created:${order.id}`, recipientUserId: user.id });
   }
-  return Response.json({ orderId, status: "pending", message: "Order intent created. Secure checkout will open when the payment provider is connected." }, { status: 201 });
+  return Response.json({ orderId, status: "pending", message: "Order received. We will contact you to confirm payment and delivery." }, { status: 201 });
 }

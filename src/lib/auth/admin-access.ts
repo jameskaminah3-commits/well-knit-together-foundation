@@ -50,3 +50,7 @@ export function hasReportingAccess(roles: AppRole[], assuranceLevel: string | nu
 export function hasPartnerRole(roles: AppRole[]) {
   return roles.includes("partner");
 }
+
+export function hasSuperadminAccess(roles: AppRole[], assuranceLevel: string | null) {
+  return assuranceLevel === "aal2" && roles.includes("superadmin");
+}

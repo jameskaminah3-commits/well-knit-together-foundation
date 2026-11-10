@@ -3,7 +3,8 @@ import Link from "next/link";
 import { DonationForm } from "@/components/donation-form";
 import { Icon } from "@/components/icon";
 import { campaignProgress, formatMoney, getActiveCampaigns } from "@/lib/fundraising";
-import { contactChannels, directGiving, foundation, hasDirectGiving, onlinePaymentsEnabled, telHref, waysWeWork } from "@/lib/site";
+import { getGivingSettings, hasDirectGivingDetails, onlineGivingAvailable, type GivingSettings } from "@/lib/payments/settings";
+import { contactChannels, foundation, telHref, waysWeWork } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Donate",
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
 };
 export const dynamic = "force-dynamic";
 
-function DirectGiving() {
-  const configured = hasDirectGiving();
+function DirectGiving({ settings: directGiving }: { settings: GivingSettings }) {
+  const configured = hasDirectGivingDetails(directGiving);
   return (
     <div className="direct-giving">
       <div><p className="eyebrow">Give directly</p><h3>{configured ? "Give by M-Pesa or bank transfer." : "Talk to us about giving."}</h3></div>
@@ -24,7 +25,7 @@ function DirectGiving() {
             <ol>
               <li>Open M-Pesa and choose <strong>Lipa na M-Pesa → Pay Bill</strong>.</li>
               <li>Business number: <strong>{directGiving.mpesaPaybill}</strong></li>
-              <li>Account number: <strong>{directGiving.mpesaAccount ?? "DONATION"}</strong></li>
+              <li>Account number: <strong>{directGiving.mpesaAccountReference ?? "DONATION"}</strong></li>
               <li>Enter the amount and your M-Pesa PIN.</li>
             </ol>
           ) : (
@@ -49,6 +50,7 @@ function DirectGiving() {
           </dl>
         </div>
       )}
+      {directGiving.givingNote && <p className="form-note">{directGiving.givingNote}</p>}
       <p className="muted">{configured ? "For a receipt, or to give in kind, as a business, or from outside Kenya, contact us and we will help." : "Secure online giving is being connected. To give now, pledge support, give in kind, or fund a specific program, contact our team and we will share verified payment details."}</p>
       <div className="button-row">
         {contactChannels.phone && <a className="button button-small" href={telHref(contactChannels.phone)}>Call {contactChannels.phone}</a>}
@@ -60,9 +62,9 @@ function DirectGiving() {
 }
 
 export default async function DonatePage() {
-  const campaigns = await getActiveCampaigns();
+  const [campaigns, settings, onlineAvailable] = await Promise.all([getActiveCampaigns(), getGivingSettings(), onlineGivingAvailable()]);
   const campaign = campaigns[0];
-  const online = onlinePaymentsEnabled() && Boolean(campaign);
+  const showForm = Boolean(campaign) && (onlineAvailable || process.env.NODE_ENV !== "production");
   return (
     <>
       <section className="page-hero"><div className="container"><p className="eyebrow">Donate</p><h1>Help a caregiver keep going.</h1><p>Your gift funds the practical things that change a family’s week: training, equipment, school fees, and a support group that shows up.</p></div></section>
@@ -83,7 +85,7 @@ export default async function DonatePage() {
             </div>
           </div>
           <div>
-            {online && campaign ? <><DonationForm campaignId={campaign.id} currency={campaign.currency} />{campaign.source === "preview" && <p className="form-note">Local preview: connect Supabase to record this gift intent.</p>}{hasDirectGiving() && <div style={{ marginTop: 18 }}><DirectGiving /></div>}</> : <DirectGiving />}
+            {showForm && campaign ? <><DonationForm campaignId={campaign.id} currency={campaign.currency} online={onlineAvailable} />{!onlineAvailable && <p className="form-note">Development mode: online giving is switched off, so gifts are recorded without charging anyone.</p>}{hasDirectGivingDetails(settings) && <div style={{ marginTop: 18 }}><DirectGiving settings={settings} /></div>}</> : <DirectGiving settings={settings} />}
           </div>
         </div>
       </section>
