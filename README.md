@@ -43,4 +43,13 @@ npm run lint
 
 For connected local development, see `docs/LOCAL_DEVELOPMENT.md`.
 
+## Before launch
+
+Read `docs/PRODUCTION_REVIEW.md`. In short:
+
+- Set the public contact variables (`NEXT_PUBLIC_CONTACT_*`) and direct giving variables (`NEXT_PUBLIC_MPESA_*`, `NEXT_PUBLIC_BANK_*`) in Railway, then redeploy. They are read at build time.
+- Keep `PAYMENT_PROVIDER_ENABLED=false` until a real payment provider integration exists. `/donate` then shows the direct giving details.
+- Apply every migration in `supabase/migrations`, including `0014_production_content_hygiene.sql`, which retires the sample catalogue, events, and campaign.
+- Sample content appears only in local development (`next dev`). Production shows only approved records from Supabase.
+
 This is the foundation layer. Payment providers, case-management workflows, inventory mutations, notifications, and production integrations are deliberately documented as later phases rather than being faked in the UI.
