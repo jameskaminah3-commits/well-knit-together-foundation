@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { safeNextPath } from "@/lib/security/redirect";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -31,7 +33,13 @@ export default function LoginPage() {
       setBusy(false);
       return;
     }
-    window.location.assign(result?.nextPath ?? getNextPath());
+    const destination = result?.nextPath ?? getNextPath();
+    const { data: level } = await createClient().auth.mfa.getAuthenticatorAssuranceLevel();
+    if (level?.nextLevel === "aal2" && level.currentLevel !== "aal2") {
+      router.push(`/auth/verify?next=${encodeURIComponent(destination)}`);
+      return;
+    }
+    window.location.assign(destination);
   }
 
   async function sendMagicLink() {

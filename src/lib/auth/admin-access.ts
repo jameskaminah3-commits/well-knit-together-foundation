@@ -5,14 +5,14 @@ import type { AppRole } from "@/types/domain";
 export async function getAdminActor() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { supabase, user: null as User | null, roles: [] as AppRole[], assuranceLevel: null as string | null };
+  if (!user) return { supabase, user: null as User | null, roles: [] as AppRole[], assuranceLevel: null as string | null, canVerify: false };
 
   const [{ data: roleRows }, { data: assurance }] = await Promise.all([
     supabase.from("user_roles").select("role").eq("user_id", user.id),
     supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
   ]);
   const roles = (roleRows ?? []).map((row) => row.role as AppRole);
-  return { supabase, user, roles, assuranceLevel: assurance?.currentLevel ?? null };
+  return { supabase, user, roles, assuranceLevel: assurance?.currentLevel ?? null, canVerify: assurance?.nextLevel === "aal2" && assurance.currentLevel !== "aal2" };
 }
 
 export function hasAdminRole(roles: AppRole[]) {

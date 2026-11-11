@@ -16,6 +16,7 @@ export default function SecurityPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [sessionVerified, setSessionVerified] = useState(true);
 
   async function loadFactors() {
     const { data, error: listError } = await createClient().auth.mfa.listFactors();
@@ -30,6 +31,9 @@ export default function SecurityPage() {
       if (!active) return;
       if (listError) setError(listError.message);
       else setFactors((data?.all ?? []) as Factor[]);
+    });
+    void supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
+      if (active) setSessionVerified(data?.currentLevel === "aal2");
     });
     return () => { active = false; };
   }, []);
@@ -61,6 +65,7 @@ export default function SecurityPage() {
       if (verifyError) setError(verifyError.message);
       else {
         setMessage("Authenticator verification complete. Your factor is now enrolled.");
+        setSessionVerified(true);
         setQrCode("");
         setSecret("");
         setCode("");
@@ -74,7 +79,7 @@ export default function SecurityPage() {
     <section className="dashboard-page narrow-page">
       <p className="eyebrow">Security</p>
       <h1>Protect your account.</h1>
-      <p className="lead muted">Use an authenticator app to add a time-based one-time password to your account. Privileged staff enforcement will be enabled with the role administration phase.</p>
+      <p className="lead muted">Use an authenticator app such as Google Authenticator or Microsoft Authenticator. Staff tools stay locked until your session is verified with a code from the app.</p>
       {error && <p className="form-alert form-alert-error" role="alert">{error}</p>}
       {message && <p className="form-alert form-alert-success" role="status">{message}</p>}
       <div className="info-card security-card">
@@ -82,6 +87,7 @@ export default function SecurityPage() {
         <h3>{factors.some((factor) => factor.status === "verified") ? "Authenticator enabled" : "Add an authenticator"}</h3>
         <p>{factors.some((factor) => factor.status === "verified") ? "A verified authenticator factor is connected to this account." : "Use Google Authenticator, 1Password, Microsoft Authenticator, or another compatible app."}</p>
         {factors.filter((factor) => factor.status === "verified").map((factor) => <p className="security-factor" key={factor.id}><strong>Verified:</strong> {factor.friendly_name || "Authenticator app"}</p>)}
+        {factors.some((factor) => factor.status === "verified") && !sessionVerified && <div className="dashboard-notice"><div><strong>This session is not verified yet.</strong><p>Enter a code from your authenticator app to open staff tools.</p></div><Link className="button button-small" href="/auth/verify?next=/dashboard">Verify this session</Link></div>}
         {!qrCode && !factors.some((factor) => factor.status === "verified") && <button className="button" type="button" onClick={beginEnrollment} disabled={busy}>{busy ? "Preparing…" : "Set up authenticator"}</button>}
         {qrCode && <div className="mfa-enrollment"><Image src={qrCode} width={190} height={190} unoptimized alt="Authenticator setup QR code" /><p className="form-note">If scanning is unavailable, enter this setup key manually: <code>{secret}</code></p><label>Verification code<input inputMode="numeric" pattern="[0-9]*" maxLength={6} value={code} onChange={(event) => setCode(event.target.value)} placeholder="123456" /></label><button className="button" type="button" onClick={verifyEnrollment} disabled={busy || code.length < 6}>{busy ? "Verifying…" : "Verify and enable"}</button></div>}
       </div>

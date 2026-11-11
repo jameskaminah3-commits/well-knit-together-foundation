@@ -16,7 +16,9 @@ export async function POST(request: Request) {
     if (!data?.consent_recorded) return NextResponse.json({ error: "This story cannot be approved without recorded consent." }, { status: 400 });
   }
   const approved = payload.decision === "approve";
-  const update = { review_status: approved ? "approved" : "rejected", status: approved ? "published" : "draft", reviewed_by: actor.user.id, reviewed_at: new Date().toISOString(), ...(approved ? { published_at: new Date().toISOString() } : {}) };
+  // Programmes have no published_at column; setting it made every programme approval fail.
+  const stampsPublication = payload.entityType !== "program";
+  const update = { review_status: approved ? "approved" : "rejected", status: approved ? "published" : "draft", reviewed_by: actor.user.id, reviewed_at: new Date().toISOString(), ...(approved && stampsPublication ? { published_at: new Date().toISOString() } : {}) };
   const { error } = await actor.supabase.from(table).update(update).eq("id", payload.entityId);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ ok: true });

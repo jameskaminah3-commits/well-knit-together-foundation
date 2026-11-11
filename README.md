@@ -49,7 +49,7 @@ Read `docs/PRODUCTION_REVIEW.md`. In short:
 
 - Set the public contact variables (`NEXT_PUBLIC_CONTACT_*`) and direct giving variables (`NEXT_PUBLIC_MPESA_*`, `NEXT_PUBLIC_BANK_*`) in Railway, then redeploy. They are read at build time.
 - Set `PAYMENT_ENCRYPTION_KEY`, `PAYMENT_WEBHOOK_SECRET`, and `SUPABASE_SERVICE_ROLE_KEY`. The super administrator then manages Paybill and bank details, M-Pesa Daraja credentials, and the online giving switch under **Payment settings** in the workspace.
-- Apply every migration in `supabase/migrations` in order (0001–0018). Migrations 0016–0018 fix case notes, event registrations, the audit trail, and shop stock.
+- Apply every migration in `supabase/migrations` in order (0001–0019). Migrations 0016–0019 fix case notes, event registrations, the audit trail, shop stock, and staff saving programmes, stories, and application reviews.
 - Sample content appears only in local development (`next dev`). Production shows only approved records from Supabase.
 - Demo data and one account per role live in `supabase/seed.sql`, for local and staging use only. See `docs/LOCAL_DEVELOPMENT.md` and `docs/ROLES.md`.
 

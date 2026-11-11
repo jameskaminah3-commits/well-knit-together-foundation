@@ -41,7 +41,9 @@ export default async function DashboardPage() {
   return (
     <section className="dashboard-page">
       <div className="dashboard-heading"><div><p className="eyebrow">Your workspace</p><h1>{name ? `Karibu, ${name}.` : "Good to see you."}</h1><p className="lead muted">Everything you have access to, in one place.</p></div><Link className="button button-secondary" href="/">View public site</Link></div>
-      {isStaff && !verified && <div className="dashboard-notice"><div><strong>Turn on two-step verification to open staff tools.</strong><p>Case records, finance, publishing, and payment settings require an authenticator app—for your protection and for the people we serve.</p></div><Link className="button button-small" href="/dashboard/security">Set up security</Link></div>}
+      {isStaff && !verified && (actor.canVerify
+        ? <div className="dashboard-notice"><div><strong>Verify this session to open staff tools.</strong><p>Enter the code from your authenticator app. Staff tools stay locked until you do.</p></div><Link className="button button-small" href="/auth/verify?next=/dashboard">Verify now</Link></div>
+        : <div className="dashboard-notice"><div><strong>Turn on two-step verification to open staff tools.</strong><p>Case records, finance, publishing, and payment settings require an authenticator app—for your protection and for the people we serve.</p></div><Link className="button button-small" href="/dashboard/security">Set up security</Link></div>)}
 
       <div className="role-guide-grid">
         {myGuides.length ? myGuides.map((guide) => <article className="role-guide-card role-current" key={guide.role}><div className="role-meta"><span className="role-chip">{roleLabels[guide.role]}</span>{guide.requiresMfa && <span className="role-chip role-chip-muted">Needs two-step verification</span>}</div><h3>What you can do</h3><p className="muted">{guide.summary}</p><ul>{guide.canDo.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul></article>)

@@ -51,7 +51,7 @@ The people most likely to use the site are caregivers on low-cost Android phones
 1. **Official contact channels.** Set `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_CONTACT_WHATSAPP`, `NEXT_PUBLIC_CONTACT_EMAIL`, and `NEXT_PUBLIC_SAFEGUARDING_EMAIL` in Railway, then redeploy (they are read at build time). The registration record lists the chairperson's personal mobile as the organisation's telephone; a dedicated foundation line and inbox are strongly recommended.
 2. **Giving details.** Set the Paybill/Till and bank variables. Use only accounts registered in the foundation's name.
 3. **Connect M-Pesa.** Online giving now uses M-Pesa Express (STK Push). The super administrator saves the Daraja credentials under **Payment settings**, tests the connection, and switches online giving on. Start in the Daraja sandbox, then switch to production credentials once Safaricom has approved the shortcode for M-Pesa Express. `PAYMENT_ENCRYPTION_KEY`, `PAYMENT_WEBHOOK_SECRET`, and an https `NEXT_PUBLIC_SITE_URL` are required.
-4. **Apply migrations `0014` to `0018`** to the production Supabase project. Never load `supabase/seed.sql` there.
+4. **Apply migrations `0014` to `0019`** to the production Supabase project. Never load `supabase/seed.sql` there.
 5. **Content:** publish real programs, consented stories, and homepage photographs through the content studio and media library. Publish the first annual report after the financial year closes on 31 December.
 6. **Data protection:** register with the ODPC as a data controller (charitable organisations processing health data are generally required to), have counsel review the privacy notice, and name a data-protection contact.
 7. **Safeguarding:** adopt a written policy, name a safeguarding lead, set the safeguarding email, and review the helpline numbers every year.
@@ -88,3 +88,13 @@ A second pass signed in as every role against the real database rules. It found 
 - Shop stock reservations never cleared.
 
 It also filled missing workspaces: Shop, My volunteering, partner referral responses, finance's direct-gift recording, and community role assignment. Super administrator payment settings and M-Pesa Express were added too. Details are in `docs/ROLES.md`; `supabase/tests/role_access.sql` runs 36 access checks.
+
+### Local end-to-end run (November 2026)
+
+All 19 migrations and the seed were applied to the official local Supabase stack. A browser then signed in as each of the ten demo accounts and carried out their main tasks: 59 of 59 checks pass. The run found and fixed five more problems that only show up when signed in:
+
+- Content editors could not save programmes or stories, and programme approval always failed.
+- Staff could not approve partner or volunteer applications.
+- Staff had no way to enter their authenticator code on later sign-ins.
+- The sign-in limit would lock out a shared office network.
+- The browser security policy blocked a Supabase project on a custom or local address.

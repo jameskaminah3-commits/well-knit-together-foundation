@@ -56,7 +56,7 @@ Staff tools stay locked until the account has two-step verification. Sign in, op
 
 ### Loading it
 
-With the Supabase CLI (Docker required), `supabase start` followed by `supabase db reset` applies every migration and then the seed. For a hosted staging project, run each file in `supabase/migrations` in order, then `supabase/seed.sql`, in the SQL editor.
+With the Supabase CLI (Docker required), `supabase start` followed by `supabase db reset` applies every migration and then the seed. In `supabase/config.toml`, set `[auth.mfa.totp] enroll_enabled = true` and `verify_enabled = true` so staff can enrol an authenticator, and add `http://localhost:3000/**` to `additional_redirect_urls`. Point `.env.local` at the URL and keys that `supabase start` prints. For a hosted staging project, run each file in `supabase/migrations` in order, then `supabase/seed.sql`, in the SQL editor.
 
 The seed refuses to run if the database already has any non-demo user. Before a staging project goes live, run `supabase/remove_demo_seed.sql` to remove every demo account and record. The three starter programmes are kept.
 
@@ -69,3 +69,7 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/role_access.sql
 ```
 
 Every line should start with `ok`. See `docs/ROLES.md` for what each role can do.
+
+### Pictures
+
+Demo pictures are original illustrations, not photographs: seven shop products in `public/demo/products` and covers for the three programmes, three stories, and three news items in `public/demo/covers`. Real photographs belong in the media library with recorded consent.

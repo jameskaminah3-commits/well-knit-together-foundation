@@ -55,7 +55,7 @@ Anyone signed in, with or without a role, can see their own gifts, orders, and s
 
 ## Dashboard audit, November 2026
 
-Each workspace was tested against the real database rules by signing in as each demo account, with and without two-step verification. The repeatable version is `supabase/tests/role_access.sql` (36 checks).
+Each workspace was tested on a local Supabase stack (`supabase start`) by signing in as every demo account in a browser, enrolling an authenticator for staff, and carrying out each role's main tasks: 59 checks, all passing, including an M-Pesa gift from PIN prompt to receipt against a mock Daraja. The database-level version is `supabase/tests/role_access.sql` (36 checks).
 
 | Area | Problem found | Fix |
 | --- | --- | --- |
@@ -71,6 +71,10 @@ Each workspace was tested against the real database rules by signing in as each 
 | Finance | Gifts received by Paybill or bank never got a receipt or counted towards a campaign. | **Record a direct gift** form with duplicate protection |
 | Payments | Online giving depended on a server flag, with no real provider behind it. | Super administrator **Payment settings** and M-Pesa Express (STK Push) |
 | Language | Internal "Phase 4/5/7/8" labels; "Kisumu" placeholders. | Removed; served counties used throughout |
+| Content studio | **Editors could not create or edit programmes or stories**, and approving a programme always failed (it set a column programmes do not have). | Migration `0019`; review endpoint fixed |
+| Engagement | **Staff could not approve or decline partner and volunteer applications** (policy without a table privilege). | Migration `0019` |
+| Sign-in | **Staff were locked out of staff tools after their first session**: nothing asked for the authenticator code on later sign-ins. | `/auth/verify` step after sign-in, magic link, and invite; "Verify this session" prompts |
+| Sign-in | Eight sign-ins per 15 minutes per network locked out a shared office or training room. | Limit per account, with a looser cap per network |
 
 ## Demo accounts
 

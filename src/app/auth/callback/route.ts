@@ -11,7 +11,11 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(new URL(next, requestUrl.origin));
+    if (!error) {
+      const { data: level } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (level?.nextLevel === "aal2" && level.currentLevel !== "aal2") return NextResponse.redirect(new URL(`/auth/verify?next=${encodeURIComponent(next)}`, requestUrl.origin));
+      return NextResponse.redirect(new URL(next, requestUrl.origin));
+    }
   }
 
   return NextResponse.redirect(new URL(`/login?error=Could%20not%20complete%20authentication`, requestUrl.origin));
