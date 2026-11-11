@@ -102,3 +102,9 @@ export function publicFileUrl(filePath: string | null) {
   if (filePath.startsWith("public-media/")) return getPublicMediaUrl(filePath.slice("public-media/".length));
   return /^https:\/\//.test(filePath) ? filePath : null;
 }
+
+/** Resolves a stored image reference: site assets start with "/", everything else lives in public storage. */
+export function mediaSrc(path: string | null) {
+  if (!path) return null;
+  return path.startsWith("/") ? path : getPublicMediaUrl(path);
+}

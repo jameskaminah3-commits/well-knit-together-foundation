@@ -68,6 +68,7 @@ where mpesa_paybill = '174379' or giving_note like 'Demo environment%';
 
 -- Program and story authorship by demo staff is cleared, not deleted: the
 -- three starter programmes are the foundation's real programme areas.
+update public.programs set image_path = null where image_path like '/demo/%';
 update public.programs set created_by = null where created_by in (select id from demo_users);
 update public.programs set reviewed_by = null where reviewed_by in (select id from demo_users);
 

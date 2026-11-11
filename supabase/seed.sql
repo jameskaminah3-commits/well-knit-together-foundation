@@ -3,6 +3,7 @@
 -- =============================================================================
 -- For local development (`supabase db reset`) and staging only.
 -- Every person, organisation, story, gift, and case below is fictional.
+-- Pictures are original illustrations in public/demo (products and covers).
 --
 -- Demo accounts (all use the password  WellKnit-Demo-2026!):
 --   superadmin@demo.wellknit.test   Amani Mwakio        Super administrator
@@ -501,6 +502,28 @@ from (values
   ('d9000000-0000-4000-8000-000000000003', 'd7000000-0000-4000-8000-000000000006', 5, 6500, 'The circle gift hamper')
 ) as item(order_id, product_id, quantity, price, name)
 where not exists (select 1 from public.order_items existing where existing.order_id = item.order_id::uuid and existing.product_id = item.product_id::uuid);
+
+-- -----------------------------------------------------------------------------
+-- Illustrated covers (original artwork in public/demo/covers)
+-- -----------------------------------------------------------------------------
+update public.programs set image_path = '/demo/covers/program-' || slug || '.svg'
+where slug in ('caregiver-support', 'skills-livelihoods', 'education-advocacy') and image_path is null;
+
+update public.stories set image_path = cover.path
+from (values
+  ('d2000000-0000-4000-8000-000000000001', '/demo/covers/story-basket-to-business.svg'),
+  ('d2000000-0000-4000-8000-000000000002', '/demo/covers/story-ramp-first-day.svg'),
+  ('d2000000-0000-4000-8000-000000000003', '/demo/covers/story-saturday-circle.svg')
+) as cover(id, path)
+where stories.id = cover.id::uuid;
+
+update public.content_items set image_path = cover.path
+from (values
+  ('d3000000-0000-4000-8000-000000000001', '/demo/covers/news-back-to-school.svg'),
+  ('d3000000-0000-4000-8000-000000000002', '/demo/covers/news-home-care-graduates.svg'),
+  ('d3000000-0000-4000-8000-000000000003', '/demo/covers/news-weavers-join-shop.svg')
+) as cover(id, path)
+where content_items.id = cover.id::uuid;
 
 -- -----------------------------------------------------------------------------
 -- Giving settings (demo values; Safaricom's public sandbox Paybill)
